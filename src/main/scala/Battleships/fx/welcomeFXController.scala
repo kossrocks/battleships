@@ -86,7 +86,7 @@ class welcomeFXController extends Initializable {
   var player2_fleet_orig: Fleet = new Fleet(List(List(Position(0, 0))))
 
   //TURNINFO
-  var turn : Int = 0
+  var turn : Int = -1
 
   override def initialize(url: URL, rb: ResourceBundle): Unit = initGame()
 
@@ -149,11 +149,13 @@ class welcomeFXController extends Initializable {
       player1_battleships = battleShips_Amount
       player1_cruisers = cruisers_Amount
       player1_submarines = submarines_Amount
+      player1_fleet_orig.shipsPos = player1_fleet.shipsPos
 
       //Set Player2VARS
       player2_battleships = battleShips_Amount
       player2_cruisers = cruisers_Amount
       player2_submarines = submarines_Amount
+      player2_fleet_orig.shipsPos = player2_fleet.shipsPos
 
       //Set STAT INFO
       player.setText(player1.name + " it´s your turn!")
@@ -338,6 +340,7 @@ class welcomeFXController extends Initializable {
       if (player2_submarines + player2_cruisers + player2_battleships == 0) {
 
         prepGame()
+
       }
     }
   }
@@ -366,10 +369,10 @@ class welcomeFXController extends Initializable {
     game.setManaged(false)
     //fifty fifty wer startet
     val starter = scala.util.Random
-    gameStatus = starter.nextInt(2) //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
-    player1_fleet_orig = player1_fleet
-    player2_fleet_orig = player2_fleet
-    startgame(gameStatus)
+    if(turn == 0) gameStatus = starter.nextInt(2)  //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
+    player1_fleet_orig.shipsPos = player1_fleet.shipsPos
+    player2_fleet_orig.shipsPos = player2_fleet.shipsPos
+    startgame(turn)
   }
 
   //just a small helper for small people
@@ -431,6 +434,7 @@ class welcomeFXController extends Initializable {
         player2_Grid.setManaged(true)
         player2_Grid.setVisible(true)
         turnLabel.setText("It´s " + player2.name + " turn")
+        if(turn == 0) turn = 2
         turn += 1
       }
     }
@@ -465,6 +469,7 @@ class welcomeFXController extends Initializable {
         player2_Grid.setManaged(false)
         player2_Grid.setVisible(false)
         turnLabel.setText("It´s " + player1.name + " turn")
+        if(turn == 0) turn = 2
         turn += 1
       }
     }
@@ -488,20 +493,30 @@ class welcomeFXController extends Initializable {
     var fileName: String = gameName
     val origFileName: String = gameName
     var index: Int = 0
+    // Falls das file bereits existiert, wird es nicht überschrieben
     while (Files.exists(Paths.get(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${fileName}.txt"))) {
       fileName = origFileName + index
       index += 1
     }
     val file: PrintWriter = new PrintWriter(new File(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${fileName}.txt"))
     file.write(
-      s"${player1.name} ${player2.name} ${gameStatus} ${player1_zerstoert} ${player2_zerstoert} ${battleShips_Amount} ${submarines_Amount} ${cruisers_Amount} ${player2_fleet.shipsPos} ${player2_fleet.shipsPos} ${player1.shots} ${player2.shots} ${player1.takenshots} ${player2.takenshots} ${gameName} ${player1_fleet_orig.shipsPos} ${player2_fleet_orig.shipsPos}")
+      s"${player1.name}@${player2.name}@${turn}@${player1_zerstoert}@${player2_zerstoert}@${battleShips_Amount}@${submarines_Amount}@${cruisers_Amount}@${player1_fleet.shipsPos}@${player2_fleet.shipsPos}@${player1.shots}@${player2.shots}@${player1.takenshots}@${player2.takenshots}@${gameName}@${player1_fleet_orig.shipsPos}@${player2_fleet_orig.shipsPos}")
     file.close()
 
-
+    //Der Name des zuletzt gespeicherten Spiels wird vermerkt
     val lastBattle = new PrintWriter(new File("C:/Workspace/battleships/src/main/scala/Battleships/Saves/lastBattle.txt"))
     lastBattle.write(s"${fileName}")
     lastBattle.close()
     println("Game saved")
+    /*
+    val lastBattleFile: BufferedSource = Source.fromFile("C:/Workspace/battleships/src/main/scala/Battleships/Saves/lastBattle.txt")
+    val lastBattle1: String = lastBattleFile.getLines().mkString
+    lastBattleFile.close()
+    val file2: BufferedSource = Source.fromFile(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${lastBattle1}.txt")
+    val content: Array[String] = file2.getLines().mkString.split("@")
+    file2.close()
+    println(s"${content(1)}")
+    */
   }
 
   //load function
@@ -510,21 +525,29 @@ class welcomeFXController extends Initializable {
     val lastBattle: String = lastBattleFile.getLines().mkString
     lastBattleFile.close()
     val file: BufferedSource = Source.fromFile(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${lastBattle}.txt")
-    val content: Array[String] = file.getLines().mkString.split(" ")
+    val content: Array[String] = file.getLines().mkString.split("@")
     file.close()
 
-    var shotPos1: Seq[String] = content(1).filter(_.isDigit).map(_ + "")
-    var shotPos2: Seq[String] = content(4).filter(_.isDigit).map(_ + "")
+    var shotPos1: Seq[String] = content(10).filter(_.isDigit).map(_ + "")
+    var shotPos2: Seq[String] = content(11).filter(_.isDigit).map(_ + "")
 
     player1.name = content(0)
-    player2.name = content(3)
-
+    player2.name = content(1)
+    turn = content(2).toInt
+    player1_zerstoert = content(3).toInt
+    player2_zerstoert = content(4).toInt
+    battleShips_Amount = content(5).toInt
+    submarines_Amount = content(6).toInt
+    cruisers_Amount = content(7).toInt
+    player1_fleet.addShip(mkListOfListOfPos(content(8)))
+    player2_fleet.addShip(mkListOfListOfPos(content(9)))
     player1.shots = mkListOfPos(shotPos1)
     player2.shots = mkListOfPos(shotPos2)
-    player1_fleet.shipsPos = mkListOfListOfPos(content(2))
-    player2_fleet.shipsPos = mkListOfListOfPos(content(5))
-    player1_fleet_orig.shipsPos = mkListOfListOfPos(content(6))
-    player2_fleet_orig.shipsPos = mkListOfListOfPos(content(7))
+    player1.takenshots = content(12).toInt
+    player2.takenshots = content(13).toInt
+    gameName = content(14)
+    player1_fleet_orig.addShip(mkListOfListOfPos(content(15)))
+    player2_fleet_orig.addShip(mkListOfListOfPos(content(16)))
 
     def mkListOfPos(seq: Seq[String]): List[Position] = {
       var index = 0
@@ -565,6 +588,32 @@ class welcomeFXController extends Initializable {
 
       listOfListOfPos
     }
+    gameStart.setManaged(true)
+    gameStart.setVisible(true)
+    if(isEven(turn)) {
+      player1_Grid.setManaged(false)
+      player1_Grid.setVisible(false)
+    }else{
+      player2_Grid.setManaged(false)
+      player2_Grid.setVisible(false)
+    }
+    println(player1.name)
+    println(player2.name)
+    println(turn)
+    println(player1_zerstoert)
+    println(player2_zerstoert)
+    println(battleShips_Amount)
+    println(submarines_Amount)
+    println(cruisers_Amount)
+    println(player1_fleet.shipsPos)
+    println(player2_fleet.shipsPos)
+    println(player1.shots)
+    println(player2.shots)
+    println(player1.takenshots)
+    println(player2.takenshots)
+    println(gameName)
+    println(player1_fleet_orig.shipsPos)
+    println(player2_fleet_orig.shipsPos)
 
 
   }
