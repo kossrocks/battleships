@@ -149,13 +149,11 @@ class welcomeFXController extends Initializable {
       player1_battleships = battleShips_Amount
       player1_cruisers = cruisers_Amount
       player1_submarines = submarines_Amount
-      player1_fleet_orig.shipsPos = player1_fleet.shipsPos
 
       //Set Player2VARS
       player2_battleships = battleShips_Amount
       player2_cruisers = cruisers_Amount
       player2_submarines = submarines_Amount
-      player2_fleet_orig.shipsPos = player2_fleet.shipsPos
 
       //Set STAT INFO
       player.setText(player1.name + " it´s your turn!")
@@ -274,7 +272,7 @@ class welcomeFXController extends Initializable {
       if (hasSimiliarEntitites(Ship, player2_fleet.shipsPos)) println("There is a Ship already.")
       else {
         Ship.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, battleGrid).setStyle("-fx-background-color: #36403B"))
-        player1_fleet.addShip(List(Ship)) //duplicate Code otherwhise ship will not be added watch how code gets executed!
+        player2_fleet.addShip(List(Ship)) //duplicate Code otherwhise ship will not be added watch how code gets executed!
         shipReduction() //afterwards is ESSENTIAL DO NOT TOUCH PLS
       }
     }
@@ -338,7 +336,8 @@ class welcomeFXController extends Initializable {
         }
       }
       if (player2_submarines + player2_cruisers + player2_battleships == 0) {
-
+        player1_fleet_orig.shipsPos = player1_fleet.shipsPos  //FOR LOADING FUNCTION
+        player2_fleet_orig.shipsPos = player2_fleet.shipsPos
         prepGame()
 
       }
@@ -370,8 +369,7 @@ class welcomeFXController extends Initializable {
     //fifty fifty wer startet
     val starter = scala.util.Random
     if(turn == 0) gameStatus = starter.nextInt(2)  //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
-    player1_fleet_orig.shipsPos = player1_fleet.shipsPos
-    player2_fleet_orig.shipsPos = player2_fleet.shipsPos
+
     startgame(turn)
   }
 
@@ -539,15 +537,15 @@ class welcomeFXController extends Initializable {
     battleShips_Amount = content(5).toInt
     submarines_Amount = content(6).toInt
     cruisers_Amount = content(7).toInt
-    player1_fleet.addShip(mkListOfListOfPos(content(8)))
-    player2_fleet.addShip(mkListOfListOfPos(content(9)))
+    player1_fleet = mkListOfListOfPos(content(8))
+    player2_fleet = mkListOfListOfPos(content(9))
     player1.shots = mkListOfPos(shotPos1)
     player2.shots = mkListOfPos(shotPos2)
     player1.takenshots = content(12).toInt
     player2.takenshots = content(13).toInt
     gameName = content(14)
-    player1_fleet_orig.addShip(mkListOfListOfPos(content(15)))
-    player2_fleet_orig.addShip(mkListOfListOfPos(content(16)))
+    player1_fleet_orig = mkListOfListOfPos(content(15))
+    player2_fleet_orig = mkListOfListOfPos(content(16))
 
     def mkListOfPos(seq: Seq[String]): List[Position] = {
       var index = 0
@@ -556,11 +554,11 @@ class welcomeFXController extends Initializable {
       var ListOfPos: List[Position] = List[Position]()
       while (index < seq.size) {
         if (index % 2 == 0) {
-          seqOfX :+ seq(index).toInt
+          seqOfX = seqOfX :+ seq(index).toInt
           index += 1
         }
         else {
-          seqOfY :+ seq(index).toInt
+          seqOfY = seqOfY :+ seq(index).toInt
           index += 1
         }
       }
@@ -573,10 +571,11 @@ class welcomeFXController extends Initializable {
       ListOfPos
     }
 
-    def mkListOfListOfPos(string: String): List[List[Position]] = {
+    def mkListOfListOfPos(string: String): Fleet = {
       var arrayString: Array[String] = string.split("List")
       var listOfListOfPos: List[List[Position]] = List[List[Position]]()
-      var index = 0
+      var fleet : Fleet = new Fleet(List(List(Position(0,0))))
+      var index = 1
 
       arrayString = arrayString.slice(2, arrayString.length)
       arrayString = arrayString.map(_.filter(_.isDigit))
@@ -586,7 +585,8 @@ class welcomeFXController extends Initializable {
         index += 1
       }
 
-      listOfListOfPos
+      fleet.addShip(listOfListOfPos)
+      fleet
     }
     gameStart.setManaged(true)
     gameStart.setVisible(true)
