@@ -586,7 +586,18 @@ class welcomeFXController extends Initializable {
     else {
       turnLabel.setText(player2.name + " won!")
     }
+
   }
+
+  //save the game a last time for highscore
+  /*def endSave(): Unit = {
+    if(!Files.exists(Paths.get("C:/Workspace/battleships/src/main/scala/Battleships/Saves/Highscore.txt"))){
+      val file : PrintWriter = new PrintWriter(new File("C:/Workspace/battleships/src/main/scala/Battleships/Saves/Highscore.txt"))
+    }else{
+      val file :
+    }
+
+  }*/
 
   //save function
   def save(): Unit = {
