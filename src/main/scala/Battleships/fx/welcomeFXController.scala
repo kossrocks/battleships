@@ -111,6 +111,7 @@ class welcomeFXController extends Initializable {
 
   @FXML private def startSetup(event: ActionEvent): Unit = {
     println("Loading Setup")
+    println(s"${getClass.getClassLoader.getResource("Saves").getPath}")
     battleNameLabel.setText(gameName)
     println(gameName)// Name des Spiels wird weitergegeben
 
@@ -601,32 +602,64 @@ class welcomeFXController extends Initializable {
 
   //save function
   def save(): Unit = {
+    def mkFilePath(array: Array[String]): String = {
+      var index = 0
+      var filePath = ""
+      while(index < array.length){
+        filePath = filePath + "/" + array(index)
+        index += 1
+      }
+      filePath
+    }
     var fileName: String = gameName
     val origFileName: String = gameName
+    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
+    var wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+
+
+
+
     var index: Int = 0
     // Falls das file bereits existiert, wird es nicht überschrieben
-    while (Files.exists(Paths.get(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${fileName}.txt"))) {
+    while (Files.exists(Paths.get(s"${wayToFile}/${fileName}.txt"))) {
       fileName = origFileName + index
       index += 1
     }
-    val file: PrintWriter = new PrintWriter(new File(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${fileName}.txt"))
+    val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/${fileName}.txt"))
     file.write(
       s"${player1.name}@${player2.name}@${turn}@${player1_zerstoert}@${player2_zerstoert}@${battleShips_Amount}@${submarines_Amount}@${cruisers_Amount}@${player1_fleet.shipsPos}@${player2_fleet.shipsPos}@${player1.shots}@${player2.shots}@${player1.takenshots}@${player2.takenshots}@${gameName}@${player1_fleet_orig.shipsPos}@${player2_fleet_orig.shipsPos}@${player1.noHits}@${player2.noHits}@${player1.hits}@${player2.hits}")
     file.close()
 
     //Der Name des zuletzt gespeicherten Spiels wird vermerkt
-    val lastBattle = new PrintWriter(new File("C:/Workspace/battleships/src/main/scala/Battleships/Saves/lastBattle.txt"))
+    val lastBattle = new PrintWriter(new File(s"${wayToFile}/lastBattle.txt"))
     lastBattle.write(s"${fileName}")
     lastBattle.close()
     println("Game saved")
+
   }
+
 
   //load function
   def load(): Unit = {
-    val lastBattleFile: BufferedSource = Source.fromFile("C:/Workspace/battleships/src/main/scala/Battleships/Saves/lastBattle.txt")
+    def mkFilePath(array: Array[String]): String = {
+      var index = 0
+      var filePath = ""
+      while(index < array.length){
+        filePath = filePath + "/" + array(index)
+        index += 1
+      }
+      filePath
+    }
+
+    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
+    val wayToFile = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+
+
+
+    val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/lastBattle.txt")
     val lastBattle: String = lastBattleFile.getLines().mkString
     lastBattleFile.close()
-    val file: BufferedSource = Source.fromFile(s"C:/Workspace/battleships/src/main/scala/Battleships/Saves/${lastBattle}.txt")
+    val file: BufferedSource = Source.fromFile(s"${wayToFile}/${lastBattle}.txt")
     val content: Array[String] = file.getLines().mkString.split("@")
     file.close()
 
