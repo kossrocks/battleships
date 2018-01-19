@@ -111,7 +111,6 @@ class welcomeFXController extends Initializable {
 
   @FXML private def startSetup(event: ActionEvent): Unit = {
     println("Loading Setup")
-    println(s"${getClass.getClassLoader.getResource("Saves").getPath}")
     battleNameLabel.setText(gameName)
     println(gameName)// Name des Spiels wird weitergegeben
 
@@ -762,7 +761,7 @@ class welcomeFXController extends Initializable {
     var list2: List[String] = List(" of ", " for ", "")
     var list3: List[String] = List("the ", "", "")
     var list4: List[String] = List("Lost ", "Broken ", "Worshiped ", "Eternal ", "Last ", "Honored ", "Sacred ", "")
-    var list5: List[String] = List("Glory", "Victory", "Nadine", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
+    var list5: List[String] = List("Glory", "Victory", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
 
     def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String], list5: List[String]): String = {
       var rand = scala.util.Random
