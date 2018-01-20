@@ -74,6 +74,7 @@ class welcomeFXController extends Initializable {
   var player1_fleet: Fleet = new Fleet(List(List(Position(0, 0))))
   var player1_zerstoert: Int = 0
   var player1_fleet_orig: Fleet = new Fleet(List(List(Position(0, 0))))
+  var player1_dead: Int = 0
 
   //PLAYER2 VARS
   var player2: Player = Player("Player2")
@@ -83,6 +84,7 @@ class welcomeFXController extends Initializable {
   var player2_fleet: Fleet = new Fleet(List(List(Position(0, 0))))
   var player2_zerstoert: Int = 0
   var player2_fleet_orig: Fleet = new Fleet(List(List(Position(0, 0))))
+  var player2_dead: Int = 0
 
   //TURNINFO
   var turn : Int = -1
@@ -113,7 +115,7 @@ class welcomeFXController extends Initializable {
     println("Loading Setup")
     battleNameLabel.setText(gameName)
     println(gameName)// Name des Spiels wird weitergegeben
-
+    println(s"${getClass.getClassLoader.getResource("Saves").getPath}") // TEST MATHIAS
     rootpane.setVisible(false)
     rootpane.setManaged(false)
     setupgame.setVisible(true)
@@ -170,6 +172,7 @@ class welcomeFXController extends Initializable {
     player1.noHits = List()
     player1.shots = List()
     player1.takenshots = 0
+    player1_dead = 0
 
     player2_battleships = 0
     player2_cruisers = 0
@@ -181,6 +184,7 @@ class welcomeFXController extends Initializable {
     player2.noHits = List()
     player2.shots = List()
     player2.takenshots = 0
+    player2_dead = 0
 
     //reset color of grid
     battleGrid.getChildren.forEach(node => node.setStyle("-fx-background-color: #62BCFA"))
@@ -521,6 +525,7 @@ class welcomeFXController extends Initializable {
           node.setStyle("-fx-background-color: #C43235")
           player1_zerstoert += 1
           if (player1_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
+            player1_dead +=1
             end(0)
           }
         }
@@ -557,6 +562,7 @@ class welcomeFXController extends Initializable {
           node.setStyle("-fx-background-color: #C43235")
           player2_zerstoert += 1
           if (player2_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
+            player2_dead += 1
             end(1)
           }
         }
@@ -590,14 +596,36 @@ class welcomeFXController extends Initializable {
   }
 
   //save the game a last time for highscore
-  /*def endSave(): Unit = {
-    if(!Files.exists(Paths.get("C:/Workspace/battleships/src/main/scala/Battleships/Saves/Highscore.txt"))){
-      val file : PrintWriter = new PrintWriter(new File("C:/Workspace/battleships/src/main/scala/Battleships/Saves/Highscore.txt"))
-    }else{
-      val file :
+  def endSave(): Unit = {
+    def mkFilePath(array: Array[String]): String = {
+      var index = 0
+      var filePath = ""
+      while(index < array.length){
+        filePath = filePath + "/" + array(index)
+        index += 1
+      }
+      filePath
     }
+    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
+    var wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
 
-  }*/
+
+    if(!Files.exists(Paths.get(s"${wayToFile}/Highscore.txt"))){
+      val file : PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
+    }else{
+      val oldFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
+      val oldData: String = oldFile.getLines().mkString
+      oldFile.close()
+      val file : PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
+      file.write(s"${oldData}\n${gameName}@${player1.takenshots}@${player2.takenshots}@${player1.name}@${player2.name}@${player1_zerstoert}@${player2_zerstoert}@${player1_dead}@${player2_dead}")
+      file.close()
+    }
+    val openFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
+    var highscoreContent = openFile.getLines().mkString
+    openFile.close()
+
+
+  }
 
   //save function
   def save(): Unit = {
@@ -610,10 +638,10 @@ class welcomeFXController extends Initializable {
       }
       filePath
     }
-    var fileName: String = gameName
-    val origFileName: String = gameName
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
     var wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+    var fileName: String = gameName
+    val origFileName: String = gameName
 
 
 
@@ -626,7 +654,7 @@ class welcomeFXController extends Initializable {
     }
     val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/${fileName}.txt"))
     file.write(
-      s"${player1.name}@${player2.name}@${turn}@${player1_zerstoert}@${player2_zerstoert}@${battleShips_Amount}@${submarines_Amount}@${cruisers_Amount}@${player1_fleet.shipsPos}@${player2_fleet.shipsPos}@${player1.shots}@${player2.shots}@${player1.takenshots}@${player2.takenshots}@${gameName}@${player1_fleet_orig.shipsPos}@${player2_fleet_orig.shipsPos}@${player1.noHits}@${player2.noHits}@${player1.hits}@${player2.hits}")
+      s"${player1.name}@${player2.name}@${turn}@${player1_zerstoert}@${player2_zerstoert}@${battleShips_Amount}@${submarines_Amount}@${cruisers_Amount}@${player1_fleet.shipsPos}@${player2_fleet.shipsPos}@${player1.shots}@${player2.shots}@${player1.takenshots}@${player2.takenshots}@${gameName}@${player1_fleet_orig.shipsPos}@${player2_fleet_orig.shipsPos}@${player1.noHits}@${player2.noHits}@${player1.hits}@${player2.hits}@${player1_dead}@${player2_dead}")
     file.close()
 
     //Der Name des zuletzt gespeicherten Spiels wird vermerkt
@@ -649,9 +677,9 @@ class welcomeFXController extends Initializable {
       }
       filePath
     }
-
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
     val wayToFile = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+
 
 
 
@@ -684,6 +712,8 @@ class welcomeFXController extends Initializable {
     player2.noHits = mkListOfPos(mkSeqString(content(18))).filter(_!=Position(0,0))
     player1.hits = mkListOfPos(mkSeqString(content(19))).filter(_!=Position(0,0))
     player2.hits = mkListOfPos(mkSeqString(content(20))).filter(_!=Position(0,0))
+    player1_dead = content(21).toInt
+    player2_dead = content(22).toInt
 
     def mkListOfPos(seq: Seq[String]): List[Position] = {
       var index = 0
