@@ -4,11 +4,23 @@ import javafx.scene.layout.{AnchorPane, GridPane, Pane}
 import javafx.scene._
 import java.net.URL
 import java.nio.file.{Files, Paths}
-import java.util.ResourceBundle
+import java.util.{Calendar, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.{Button, Label, TextField}
 import javafx.scene.input.MouseEvent
+import javafx.application.Application
+import javafx.beans.property.{SimpleIntegerProperty, SimpleStringProperty}
+import javafx.beans.value.{ChangeListener, ObservableValue}
+import javafx.collections.FXCollections
+import javafx.scene.control.cell.PropertyValueFactory
+import javafx.scene.control.{ListView, TableColumn, TableView}
+import javafx.scene.layout.StackPane
+import javafx.stage.Stage
 
+import at.fhj.utils.CanLog
+import java.sql.Date
+
+import scala.collection.JavaConverters._
 import scala.io.{BufferedSource, Source}
 import Battleships.model.{Fleet, Player, Position}
 
@@ -115,7 +127,7 @@ class welcomeFXController extends Initializable {
     println("Loading Setup")
     battleNameLabel.setText(gameName)
     println(gameName)// Name des Spiels wird weitergegeben
-    println(s"${getClass.getClassLoader.getResource("Saves").getPath}") // TEST MATHIAS
+    println(s"${getClass.getResource("Saves")}") // TEST MATHIAS
     rootpane.setVisible(false)
     rootpane.setManaged(false)
     setupgame.setVisible(true)
@@ -127,6 +139,7 @@ class welcomeFXController extends Initializable {
     rootpane.setManaged(false)
     scoreboard.setVisible(true)
     scoreboard.setManaged(true)
+    mkScoreboard()
   }
 
   @FXML private def showCredits(event: ActionEvent): Unit = {
@@ -159,8 +172,6 @@ class welcomeFXController extends Initializable {
     shipDirection = -1
     gameName = battleName()
     loaded = true
-    gameStatus = 0
-    turn = -1
 
     player1_battleships = 0
     player1_cruisers = 0
@@ -471,7 +482,7 @@ class welcomeFXController extends Initializable {
     //fifty fifty wer startet
     val starter = scala.util.Random
     if(turn < 0) gameStatus = starter.nextInt(2)  //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
-
+    turn = gameStatus
     startgame(gameStatus)
   }
 
@@ -596,7 +607,31 @@ class welcomeFXController extends Initializable {
   }
 
   //save the game a last time for highscore
-  def endSave(): Unit = {
+  def mkScoreboard(): Unit = {
+
+    case class HighscoreRow(date: String, nameOfBattle: String, winner: String, rounds: Int, replay: String) {
+
+      val battleDate = new SimpleStringProperty(date)
+      def getDate(): String = battleDate.get()
+      def setDate(d: String): Unit = battleDate.set(d)
+
+      val nameOfFight = new SimpleStringProperty(nameOfBattle)
+      def getBattleName(): String = nameOfFight.get()
+      def setBattleName(s: String): Unit = nameOfFight.set(s)
+
+      val nameOfWinner = new SimpleStringProperty(winner)
+      def getWinner(): String = nameOfWinner.get()
+      def setWinner(w: String): Unit = nameOfWinner.set(w)
+
+      val takenRounds = new SimpleIntegerProperty(rounds)
+      def getTakenRounds(): Int = takenRounds.get()
+      def setTakenRounds(tr: Int): Unit = takenRounds.set(tr)
+
+      val watchReplay = new SimpleStringProperty(replay)
+      def getReplay(): String = watchReplay.get()
+      def setReplay(r: String): Unit = watchReplay.set(r)
+    }
+
     def mkFilePath(array: Array[String]): String = {
       var index = 0
       var filePath = ""
@@ -607,23 +642,49 @@ class welcomeFXController extends Initializable {
       filePath
     }
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    var wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+    val wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
 
+    val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
+    val stringOfBattle: String = lastBattleFile.getLines().mkString
+    lastBattleFile.close()
 
-    if(!Files.exists(Paths.get(s"${wayToFile}/Highscore.txt"))){
-      val file : PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
-    }else{
-      val oldFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
-      val oldData: String = oldFile.getLines().mkString
-      oldFile.close()
-      val file : PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
-      file.write(s"${oldData}\n${gameName}@${player1.takenshots}@${player2.takenshots}@${player1.name}@${player2.name}@${player1_zerstoert}@${player2_zerstoert}@${player1_dead}@${player2_dead}")
-      file.close()
+    def mkSeqOfHighscoreRow(string: String): Seq[HighscoreRow] = {
+      var test: Array[Array[String]] = string.split("@@").map(_.split("@"))
+      var seqOfHighscoreRow: Seq[HighscoreRow] = Seq()
+      var index: Int = 0
+
+      while(index<test.length){
+
+        if(test(index)(4)<test(index)(5)){
+          seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow(test(index)(0),test(index)(1),test(index)(2),test(index)(6).toInt,"X")
+        }else if(test(index)(4)>test(index)(5)){
+          seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow(test(index)(0),test(index)(1),test(index)(3),test(index)(7).toInt,"X")
+        }else{
+          seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow("Something in",test(index)(1),"went horribly",test(index)(6).toInt,"wrong!")
+        }
+        index +=1
+      }
+      seqOfHighscoreRow
     }
-    val openFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
-    var highscoreContent = openFile.getLines().mkString
-    openFile.close()
 
+    val date: Seq[HighscoreRow] = mkSeqOfHighscoreRow(stringOfBattle)
+
+    val highscoreTable = new TableView[HighscoreRow]()
+    val colDate: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Date")
+    val colBattleName: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Battle Name")
+    val colWinner: TableColumn[HighscoreRow, String] = new  TableColumn[HighscoreRow, String]("Winner")
+    val colRounds: TableColumn[HighscoreRow, Int] = new  TableColumn[HighscoreRow, Int]("Rounds")
+
+    val colReplay: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Replay")
+    colDate.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("date"))
+    colBattleName.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("battleName"))
+    colWinner.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("winner"))
+    colRounds.setCellValueFactory(new PropertyValueFactory[HighscoreRow, Int]("takenRounds"))
+    colReplay.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("replay"))
+
+    highscoreTable.setItems(FXCollections.observableArrayList(date.asJava))
+    highscoreTable.getColumns.addAll(colDate,colBattleName,colWinner,colRounds,colReplay)
+    scoreboard.getChildren.add(highscoreTable)
 
   }
 
