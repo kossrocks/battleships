@@ -40,6 +40,7 @@ class welcomeFXController extends Initializable {
   @FXML private var battleShips: TextField = _
   @FXML private var cruisers: TextField = _
   @FXML private var submarines: TextField = _
+  @FXML private var resettext: Label = _
   @FXML private var confirm: Button = _
   @FXML private var setupError: Label = _
 
@@ -77,6 +78,7 @@ class welcomeFXController extends Initializable {
   var gameName: String = battleName()
   var loaded: Boolean = true
   var gameStatus: Int = 0
+  var resetIt: Int = 0
 
   //PLAYER1 VARS
   var player1: Player = Player("Player1")
@@ -99,7 +101,7 @@ class welcomeFXController extends Initializable {
   var player2_dead: Int = 0
 
   //TURNINFO
-  var turn : Int = -1
+  var turn: Int = -1
 
   override def initialize(url: URL, rb: ResourceBundle): Unit = initGame()
 
@@ -126,8 +128,7 @@ class welcomeFXController extends Initializable {
   @FXML private def startSetup(event: ActionEvent): Unit = {
     println("Loading Setup")
     battleNameLabel.setText(gameName)
-    println(gameName)// Name des Spiels wird weitergegeben
-    println(s"${getClass.getResource("Saves")}") // TEST MATHIAS
+    println(gameName) // Name des Spiels wird weitergegeben
     rootpane.setVisible(false)
     rootpane.setManaged(false)
     setupgame.setVisible(true)
@@ -184,6 +185,7 @@ class welcomeFXController extends Initializable {
     player1.shots = List()
     player1.takenshots = 0
     player1_dead = 0
+    resetIt = 0
 
     player2_battleships = 0
     player2_cruisers = 0
@@ -208,14 +210,14 @@ class welcomeFXController extends Initializable {
   }
 
   @FXML private def startEdit(event: ActionEvent): Unit = {
-    if(battleShips.getText.isEmpty && cruisers.getText.isEmpty && submarines.getText.isEmpty) setupError.setText("You need ships to fight, fools!")
-    else if(!isAllDigits(battleShips.getText) || !isAllDigits(cruisers.getText) || !isAllDigits(submarines.getText)) setupError.setText("Use numbers for the amount of ships, landlubber!")
+    if (battleShips.getText.isEmpty && cruisers.getText.isEmpty && submarines.getText.isEmpty) setupError.setText("You need ships to fight, fools!")
+    else if (!isAllDigits(battleShips.getText) || !isAllDigits(cruisers.getText) || !isAllDigits(submarines.getText)) setupError.setText("Use numbers for the amount of ships, landlubber!")
     else if (player1Name.getText.isEmpty || player2Name.getText.isEmpty) setupError.setText("You do not even know your own names?")
     else if (player1Name.getText.length > 10 || player2Name.getText.length > 10) setupError.setText("Use shorter names, you cannot remember the long ones!")
     else if (battleShips.getText.isEmpty || cruisers.getText.isEmpty || submarines.getText.isEmpty) setupError.setText("Do not leave any holes, your ships will be full of them!")
-    else if(battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt == 0) setupError.setText("You need ships to fight, fools!")
-    else if(battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt >= 7) setupError.setText("No more than 7 ships, greedy bastard!")
-    else if(player1Name.getText == player2Name.getText) setupError.setText("Use different Names")
+    else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt == 0) setupError.setText("You need ships to fight, fools!")
+    else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt >= 7) setupError.setText("No more than 7 ships, greedy bastard!")
+    else if (player1Name.getText == player2Name.getText) setupError.setText("Use different Names")
     else {
       println("Loading Game")
       //FETCH OUR SETTINGS
@@ -301,24 +303,24 @@ class welcomeFXController extends Initializable {
             setupLabel.setText("Select a Direction first")
           }
           case 0 => {
-            var i = x + length -1
-            if(i>6) setupLabel.setText("This wont fit!")
-            else{
-              while(i > x) {
-                var tinynode = getNode(if(i == 0) null else i, y, battleGrid)
-                Ship = Ship ::: List(Position(i+1,y+1))
+            var i = x + length - 1
+            if (i > 6) setupLabel.setText("This wont fit!")
+            else {
+              while (i > x) {
+                var tinynode = getNode(if (i == 0) null else i, y, battleGrid)
+                Ship = Ship ::: List(Position(i + 1, y + 1))
                 i = i - 1
               }
               shipPlacement(Ship, node)
             }
           }
           case 1 => {
-            var i = y + length -1
-            if(i > 6) println("This wont fit")
-            else{
-              while(i > y) {
-                var tinynode = getNode(x, if(i == 0) null else i, battleGrid)
-                Ship = Ship ::: List(Position(x+1,i+1))
+            var i = y + length - 1
+            if (i > 6) println("This wont fit")
+            else {
+              while (i > y) {
+                var tinynode = getNode(x, if (i == 0) null else i, battleGrid)
+                Ship = Ship ::: List(Position(x + 1, i + 1))
                 i = i - 1
               }
               shipPlacement(Ship, node)
@@ -337,12 +339,12 @@ class welcomeFXController extends Initializable {
             }
           }
           case 3 => {
-            var i = y - length +1
-            if(i < 0) println("This wont fit")
-            else{
-              while(i < y) {
-                var tinynode = getNode(x, if(i == 0) null else i, battleGrid)
-                Ship = Ship ::: List(Position(x+1,i+1))
+            var i = y - length + 1
+            if (i < 0) println("This wont fit")
+            else {
+              while (i < y) {
+                var tinynode = getNode(x, if (i == 0) null else i, battleGrid)
+                Ship = Ship ::: List(Position(x + 1, i + 1))
                 i = i + 1
               }
               shipPlacement(Ship, node)
@@ -434,7 +436,7 @@ class welcomeFXController extends Initializable {
         }
       }
       if (player2_submarines + player2_cruisers + player2_battleships == 0) {
-        player1_fleet_orig.shipsPos = player1_fleet.shipsPos  //FOR LOADING FUNCTION
+        player1_fleet_orig.shipsPos = player1_fleet.shipsPos //FOR LOADING FUNCTION
         player2_fleet_orig.shipsPos = player2_fleet.shipsPos
         prepGame()
 
@@ -447,7 +449,7 @@ class welcomeFXController extends Initializable {
     var node = event.getSource().toString.take(22)
     if (node == "Button[id=placeBattle,") {
       length = 5
-      placeBattle.setStyle("-fx-text-fill: #AE6619")        //change text color when button is selected
+      placeBattle.setStyle("-fx-text-fill: #AE6619") //change text color when button is selected
       placeCruiser.setStyle("-fx-text-fill: #C4A03E")
       placeCruiser.setStyle("-fx-text-fill: #C4A03E")
     }
@@ -481,7 +483,7 @@ class welcomeFXController extends Initializable {
     game.setManaged(false)
     //fifty fifty wer startet
     val starter = scala.util.Random
-    if(turn < 0) gameStatus = starter.nextInt(2)  //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
+    if (turn < 0) gameStatus = starter.nextInt(2) //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
     turn = gameStatus
     startgame(gameStatus)
   }
@@ -521,7 +523,7 @@ class welcomeFXController extends Initializable {
     var node: Node = event.getPickResult.getIntersectedNode
     var x = GridPane.getColumnIndex(node)
     var y = GridPane.getRowIndex(node)
-    if(node.toString == "Grid hgap=5.0, vgap=5.0, alignment=TOP_LEFT") println("gap")
+    if (node.toString == "Grid hgap=5.0, vgap=5.0, alignment=TOP_LEFT") println("gap")
     else {
       player1.shoot(Position(x + 1, y + 1), player2_fleet) match {
         case 0 => {
@@ -536,7 +538,7 @@ class welcomeFXController extends Initializable {
           node.setStyle("-fx-background-color: #C43235")
           player1_zerstoert += 1
           if (player1_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
-            player1_dead +=1
+            player2_dead += 1
             end(0)
           }
         }
@@ -558,7 +560,7 @@ class welcomeFXController extends Initializable {
     var node: Node = event.getPickResult.getIntersectedNode
     var x = GridPane.getColumnIndex(node)
     var y = GridPane.getRowIndex(node)
-    if(node.toString == "Grid hgap=5.0, vgap=5.0, alignment=TOP_LEFT") println("gap")
+    if (node.toString == "Grid hgap=5.0, vgap=5.0, alignment=TOP_LEFT") println("gap")
     else {
       player2.shoot(Position(x + 1, y + 1), player1_fleet) match {
         case 0 => {
@@ -573,7 +575,7 @@ class welcomeFXController extends Initializable {
           node.setStyle("-fx-background-color: #C43235")
           player2_zerstoert += 1
           if (player2_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
-            player2_dead += 1
+            player1_dead += 1
             end(1)
           }
         }
@@ -603,77 +605,111 @@ class welcomeFXController extends Initializable {
     else {
       turnLabel.setText(player2.name + " won!")
     }
+    lastSave()
+  }
+
+
+  def mkFilePath(array: Array[String]): String = {
+    var index = 0
+    var filePath = ""
+    while (index < array.length) {
+      filePath = filePath + "/" + array(index)
+      index += 1
+    }
+    filePath
+  }
+
+
+  //save the game a last time for highscore
+  def lastSave(): Unit = {
+    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
+    val wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+
+    val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
+    val oldHighscores: String = lastBattleFile.getLines().mkString
+    lastBattleFile.close()
+
+    val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
+    file.write(
+      s"${oldHighscores}${java.time.LocalDate.now()}@${gameName}@${player1.name}@${player2.name}@${player1_dead}@${player2_dead}@${player1.takenshots}@${player2.takenshots}@@")
+    file.close()
 
   }
 
-  //save the game a last time for highscore
+  //creating Scoreboard
   def mkScoreboard(): Unit = {
 
     case class HighscoreRow(date: String, nameOfBattle: String, winner: String, rounds: Int, replay: String) {
 
       val battleDate = new SimpleStringProperty(date)
+
       def getDate(): String = battleDate.get()
+
       def setDate(d: String): Unit = battleDate.set(d)
 
       val nameOfFight = new SimpleStringProperty(nameOfBattle)
+
       def getBattleName(): String = nameOfFight.get()
+
       def setBattleName(s: String): Unit = nameOfFight.set(s)
 
       val nameOfWinner = new SimpleStringProperty(winner)
+
       def getWinner(): String = nameOfWinner.get()
+
       def setWinner(w: String): Unit = nameOfWinner.set(w)
 
       val takenRounds = new SimpleIntegerProperty(rounds)
+
       def getTakenRounds(): Int = takenRounds.get()
+
       def setTakenRounds(tr: Int): Unit = takenRounds.set(tr)
 
       val watchReplay = new SimpleStringProperty(replay)
+
       def getReplay(): String = watchReplay.get()
+
       def setReplay(r: String): Unit = watchReplay.set(r)
     }
 
-    def mkFilePath(array: Array[String]): String = {
-      var index = 0
-      var filePath = ""
-      while(index < array.length){
-        filePath = filePath + "/" + array(index)
-        index += 1
-      }
-      filePath
-    }
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    val wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+    val wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
 
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
     val stringOfBattle: String = lastBattleFile.getLines().mkString
     lastBattleFile.close()
 
-    def mkSeqOfHighscoreRow(string: String): Seq[HighscoreRow] = {
-      var test: Array[Array[String]] = string.split("@@").map(_.split("@"))
-      var seqOfHighscoreRow: Seq[HighscoreRow] = Seq()
-      var index: Int = 0
+    var date: Seq[HighscoreRow] = Seq()
 
-      while(index<test.length){
+    if (stringOfBattle != "") {
+      def mkSeqOfHighscoreRow(string: String): Seq[HighscoreRow] = {
+        var test: Array[Array[String]] = string.split("@@").map(_.split("@"))
+        var seqOfHighscoreRow: Seq[HighscoreRow] = Seq()
+        var index: Int = 0
 
-        if(test(index)(4)<test(index)(5)){
-          seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow(test(index)(0),test(index)(1),test(index)(2),test(index)(6).toInt,"X")
-        }else if(test(index)(4)>test(index)(5)){
-          seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow(test(index)(0),test(index)(1),test(index)(3),test(index)(7).toInt,"X")
-        }else{
-          seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow("Something in",test(index)(1),"went horribly",test(index)(6).toInt,"wrong!")
+        while (index < test.length) {
+
+          if (test(index)(4) < test(index)(5)) {
+            seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow(test(index)(0), test(index)(1), test(index)(2), test(index)(6).toInt, "X")
+          } else if (test(index)(4) > test(index)(5)) {
+            seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow(test(index)(0), test(index)(1), test(index)(3), test(index)(7).toInt, "X")
+          } else {
+            seqOfHighscoreRow = seqOfHighscoreRow :+ HighscoreRow("Something in", test(index)(1), "went horribly", test(index)(6).toInt, "wrong!")
+          }
+          index += 1
         }
-        index +=1
+        seqOfHighscoreRow
       }
-      seqOfHighscoreRow
+
+      date = mkSeqOfHighscoreRow(stringOfBattle)
+    } else {
+      date = Seq()
     }
-
-    val date: Seq[HighscoreRow] = mkSeqOfHighscoreRow(stringOfBattle)
-
     val highscoreTable = new TableView[HighscoreRow]()
     val colDate: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Date")
     val colBattleName: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Battle Name")
-    val colWinner: TableColumn[HighscoreRow, String] = new  TableColumn[HighscoreRow, String]("Winner")
-    val colRounds: TableColumn[HighscoreRow, Int] = new  TableColumn[HighscoreRow, Int]("Rounds")
+    val colWinner: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Winner")
+    val colRounds: TableColumn[HighscoreRow, Int] = new TableColumn[HighscoreRow, Int]("Rounds")
 
     val colReplay: TableColumn[HighscoreRow, String] = new TableColumn[HighscoreRow, String]("Replay")
     colDate.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("date"))
@@ -683,28 +719,37 @@ class welcomeFXController extends Initializable {
     colReplay.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("replay"))
 
     highscoreTable.setItems(FXCollections.observableArrayList(date.asJava))
-    highscoreTable.getColumns.addAll(colDate,colBattleName,colWinner,colRounds,colReplay)
+    highscoreTable.getColumns.addAll(colDate, colBattleName, colWinner, colRounds, colReplay)
+    highscoreTable.setMinHeight(500)
+    highscoreTable.setMinWidth(510)
     scoreboard.getChildren.add(highscoreTable)
 
+
+  }
+
+  //reset Scoreboard
+  def reset(): Unit = {
+    if (resetIt == 0) {
+      resettext.setText("löschen?")
+      resetIt += 1
+    } else {
+      val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
+      val wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+
+      val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
+      file.write("")
+      file.close()
+      mkScoreboard()
+      resettext.setText("")
+    }
   }
 
   //save function
   def save(): Unit = {
-    def mkFilePath(array: Array[String]): String = {
-      var index = 0
-      var filePath = ""
-      while(index < array.length){
-        filePath = filePath + "/" + array(index)
-        index += 1
-      }
-      filePath
-    }
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    var wayToFile: String = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
+    var wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
     var fileName: String = gameName
     val origFileName: String = gameName
-
-
 
 
     var index: Int = 0
@@ -729,19 +774,8 @@ class welcomeFXController extends Initializable {
 
   //load function
   def load(): Unit = {
-    def mkFilePath(array: Array[String]): String = {
-      var index = 0
-      var filePath = ""
-      while(index < array.length){
-        filePath = filePath + "/" + array(index)
-        index += 1
-      }
-      filePath
-    }
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    val wayToFile = mkFilePath(filePath1.slice(1,filePath1.length-4)).tail + "/src/main/resources/Saves"
-
-
+    val wayToFile = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
 
 
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/lastBattle.txt")
@@ -769,10 +803,10 @@ class welcomeFXController extends Initializable {
     gameName = content(14)
     player1_fleet_orig = mkListOfListOfPos(content(15))
     player2_fleet_orig = mkListOfListOfPos(content(16))
-    player1.noHits = mkListOfPos(mkSeqString(content(17))).filter(_!=Position(0,0))
-    player2.noHits = mkListOfPos(mkSeqString(content(18))).filter(_!=Position(0,0))
-    player1.hits = mkListOfPos(mkSeqString(content(19))).filter(_!=Position(0,0))
-    player2.hits = mkListOfPos(mkSeqString(content(20))).filter(_!=Position(0,0))
+    player1.noHits = mkListOfPos(mkSeqString(content(17))).filter(_ != Position(0, 0))
+    player2.noHits = mkListOfPos(mkSeqString(content(18))).filter(_ != Position(0, 0))
+    player1.hits = mkListOfPos(mkSeqString(content(19))).filter(_ != Position(0, 0))
+    player2.hits = mkListOfPos(mkSeqString(content(20))).filter(_ != Position(0, 0))
     player1_dead = content(21).toInt
     player2_dead = content(22).toInt
 
@@ -803,7 +837,7 @@ class welcomeFXController extends Initializable {
     def mkListOfListOfPos(string: String): Fleet = {
       var arrayString: Array[String] = string.split("List")
       var listOfListOfPos: List[List[Position]] = List[List[Position]]()
-      var fleet : Fleet = new Fleet(List(List(Position(0,0))))
+      var fleet: Fleet = new Fleet(List(List(Position(0, 0))))
       var index = 1
 
       arrayString = arrayString.slice(2, arrayString.length)
@@ -825,13 +859,13 @@ class welcomeFXController extends Initializable {
 
     gameStart.setManaged(true)
     gameStart.setVisible(true)
-    if(isEven(turn)) {
+    if (isEven(turn)) {
       player2_Grid.setManaged(true)
       player2_Grid.setVisible(true)
       player1_Grid.setManaged(false)
       player1_Grid.setVisible(false)
       turnLabel.setText(s"${player2.name}´s turn")
-    }else{
+    } else {
       player1_Grid.setManaged(true)
       player1_Grid.setVisible(true)
       player2_Grid.setManaged(false)
@@ -842,16 +876,16 @@ class welcomeFXController extends Initializable {
     player1.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #C43235"))
     player1.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #36403B"))
     player2.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #C43235"))
-    player2.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y -   1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #36403B"))
+    player2.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #36403B"))
 
 
   }
 
   def battleName(): String = {
-    val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "Bloodsheding", "")
+    val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "Bloodshedding", "")
     var list2: List[String] = List(" of ", " for ", "")
     var list3: List[String] = List("the ", "", "")
-    var list4: List[String] = List("Lost ", "Broken ", "Worshiped ", "Eternal ", "Last ", "Honored ", "Sacred ", "")
+    var list4: List[String] = List("Lost ", "Broken ", "Worshipped ", "Eternal ", "Last ", "Honored ", "Sacred ", "")
     var list5: List[String] = List("Glory", "Victory", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
 
     def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String], list5: List[String]): String = {
@@ -865,32 +899,32 @@ class welcomeFXController extends Initializable {
   }
 
   //HELPING FUNCTIONS
-  def existIn (elem1 : Any, elem2 : List[Any]): Boolean = {
-    elem2.length match{
+  def existIn(elem1: Any, elem2: List[Any]): Boolean = {
+    elem2.length match {
       case 0 => false
       case otherwhise => {
         if (elem1 == elem2.head) true
-        else existIn(elem1,elem2.tail)
+        else existIn(elem1, elem2.tail)
       }
     }
   }
 
-  def existInListList (elem1 : Position, elem2 : List[List[Position]]): Boolean = {
-    elem2.length match{
+  def existInListList(elem1: Position, elem2: List[List[Position]]): Boolean = {
+    elem2.length match {
       case 0 => false
       case otherwhise => {
-        if(existIn(elem1,elem2.head)) true
-        else existInListList(elem1,elem2.tail)
+        if (existIn(elem1, elem2.head)) true
+        else existInListList(elem1, elem2.tail)
       }
     }
   }
 
-  def hasSimiliarEntitites (elem1 : List[Position],elem2 : List[List[Position]]) : Boolean = {
-    elem1.length match{
+  def hasSimiliarEntitites(elem1: List[Position], elem2: List[List[Position]]): Boolean = {
+    elem1.length match {
       case 0 => false
       case otherwhise => {
-        if(existInListList(elem1.head,elem2)) true
-        else hasSimiliarEntitites(elem1.tail,elem2)
+        if (existInListList(elem1.head, elem2)) true
+        else hasSimiliarEntitites(elem1.tail, elem2)
       }
     }
   }

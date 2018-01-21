@@ -15,7 +15,7 @@
     <children>
         <AnchorPane fx:id="rootpane" prefHeight="500.0" prefWidth="600.0">
             <children>
-                <Text fx:id="title" boundsType="LOGICAL_VERTICAL_CENTER" fill="#0d0d0d" layoutX="150.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Title&quot;" wrappingWidth="326.9830722808838">
+                <Text fx:id="title" boundsType="LOGICAL_VERTICAL_CENTER" fill="#0d0d0d" layoutX="150.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Naval Warfare&quot;" wrappingWidth="326.9830722808838">
                     <font>
                         <Font size="34.0" />
                     </font>
@@ -335,12 +335,9 @@
         </AnchorPane>
         <AnchorPane fx:id="scoreboard" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#gotoMenu" prefHeight="30.0" prefWidth="80.0" text="Main menu" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="35.0" />
-                <Text fx:id="title1" boundsType="LOGICAL_VERTICAL_CENTER" fill="#0d0d0d" layoutX="150.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Scoreboard" wrappingWidth="326.9830722808838">
-                    <font>
-                        <Font size="34.0" />
-                    </font>
-                </Text>
+            <Label fx:id="resettext" layoutX="510.0" layoutY="124.0" prefHeight="18.0" prefWidth="90.0" textAlignment="CENTER" />
+                <Button layoutX="510.0" layoutY="38.0" mnemonicParsing="false" onAction="#gotoMenu" prefHeight="30.0" prefWidth="90.0" text="Main menu" />
+            <Button layoutX="510.0" layoutY="84.0" mnemonicParsing="false" onAction="#reset" prefHeight="30.0" prefWidth="90.0" text="Reset" />
             </children>
         </AnchorPane>
         <AnchorPane fx:id="credits" layoutX="20.0" layoutY="20.0" prefHeight="500.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
