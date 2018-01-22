@@ -186,6 +186,7 @@ class welcomeFXController extends Initializable {
     player1.takenshots = 0
     player1_dead = 0
     resetIt = 0
+    resettext.setText("")
 
     player2_battleships = 0
     player2_cruisers = 0
@@ -483,9 +484,9 @@ class welcomeFXController extends Initializable {
     game.setManaged(false)
     //fifty fifty wer startet
     val starter = scala.util.Random
-    if (turn < 0) gameStatus = starter.nextInt(2) //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
+    gameStatus = starter.nextInt(2) //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
     turn = gameStatus
-    startgame(gameStatus)
+    startgame(gameStatus)/
   }
 
   //just a small helper for small people
@@ -504,14 +505,22 @@ class welcomeFXController extends Initializable {
     gameStart.setManaged(true)
     gameStart.setVisible(true)
     if (isEven(starter)) { //player 1 ones turn so player 2 Grid is active
-      turnLabel.setText(player2.name + " starts!")
+      if(player2.name == "Franz"){
+        turnLabel.setText(player2.name + " sucks!")
+      }else {
+        turnLabel.setText(player2.name + " starts!")
+      }
       player1_Grid.setManaged(false)
       player1_Grid.setVisible(false)
       player2_Grid.setManaged(true)
       player2_Grid.setVisible(true)
     }
     if (!isEven(starter)) { //player 2 ones turn so player 1 Grid is active
-      turnLabel.setText(player1.name + " starts!")
+      if(player1.name == "Franz"){
+        turnLabel.setText(player1.name + " sucks!")
+      }else {
+        turnLabel.setText(player1.name + " starts!")
+      }
       player1_Grid.setManaged(true)
       player1_Grid.setVisible(true)
       player2_Grid.setManaged(false)
@@ -718,10 +727,24 @@ class welcomeFXController extends Initializable {
     colRounds.setCellValueFactory(new PropertyValueFactory[HighscoreRow, Int]("takenRounds"))
     colReplay.setCellValueFactory(new PropertyValueFactory[HighscoreRow, String]("replay"))
 
+    colDate.setMinWidth(100)
+    colBattleName.setMinWidth(170)
+    colWinner.setMinWidth(70)
+    colRounds.setMinWidth(70)
+    colReplay.setMinWidth(70)
+
+    colDate.setMaxWidth(100)
+    colBattleName.setMaxWidth(170)
+    colWinner.setMaxWidth(70)
+    colRounds.setMaxWidth(70)
+    colReplay.setMaxWidth(70)
+
+
     highscoreTable.setItems(FXCollections.observableArrayList(date.asJava))
     highscoreTable.getColumns.addAll(colDate, colBattleName, colWinner, colRounds, colReplay)
     highscoreTable.setMinHeight(500)
-    highscoreTable.setMinWidth(510)
+    highscoreTable.setMinWidth(420)
+    highscoreTable.setMaxWidth(482)
     scoreboard.getChildren.add(highscoreTable)
 
 
@@ -882,19 +905,18 @@ class welcomeFXController extends Initializable {
   }
 
   def battleName(): String = {
-    val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "Bloodshedding", "")
+    val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "")
     var list2: List[String] = List(" of ", " for ", "")
-    var list3: List[String] = List("the ", "", "")
-    var list4: List[String] = List("Lost ", "Broken ", "Worshipped ", "Eternal ", "Last ", "Honored ", "Sacred ", "")
+    var list3: List[String] = List("the ","Lost","Eternal","Everlasting", "", "")
     var list5: List[String] = List("Glory", "Victory", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
 
-    def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String], list5: List[String]): String = {
+    def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String]): String = {
       var rand = scala.util.Random
-      var Name = list1(rand.nextInt(list1.length - 1)) + list2(rand.nextInt(list2.length - 1)) + list3(rand.nextInt(list3.length - 1)) + list4(rand.nextInt(list4.length - 1)) + list5(rand.nextInt(list5.length - 1))
+      var Name = list1(rand.nextInt(list1.length - 1)) + list2(rand.nextInt(list2.length - 1)) + list3(rand.nextInt(list3.length - 1)) + list4(rand.nextInt(list4.length - 1))
       Name
     }
 
-    randomName(list1, list2, list3, list4, list5)
+    randomName(list1, list2, list3, list5)
 
   }
 
