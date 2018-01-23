@@ -734,8 +734,8 @@ class welcomeFXController extends Initializable {
 
   //save the game a last time for highscore
   def lastSave(): Unit = {
-    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    val wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+
+    val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
     val oldHighscores: String = lastBattleFile.getLines().mkString
@@ -784,8 +784,7 @@ class welcomeFXController extends Initializable {
       def setReplay(r: String): Unit = watchReplay.set(r)
     }
 
-    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    val wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+    val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
     val stringOfBattle: String = lastBattleFile.getLines().mkString
@@ -861,8 +860,8 @@ class welcomeFXController extends Initializable {
       resettext.setText("delete?")
       resetIt += 1
     } else {
-      val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-      val wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+
+      val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
       val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
       file.write("")
@@ -874,19 +873,19 @@ class welcomeFXController extends Initializable {
 
   //save function
   def save(): Unit = {
-    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    var wayToFile: String = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+
+    val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
     var fileName: String = gameName
     val origFileName: String = gameName
 
 
     var index: Int = 0
     // Falls das file bereits existiert, wird es nicht überschrieben
-    while (Files.exists(Paths.get(s"${wayToFile}/${fileName}.txt"))) {
+    while (Files.exists(Paths.get(s"${fileName}.txt"))) {
       fileName = origFileName + index
       index += 1
     }
-    val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/${fileName}.txt"))
+    val file: PrintWriter = new PrintWriter(new File(s"${fileName}.txt"))
     file.write(
       s"${player1.name}@${player2.name}@${turn}@${player1_zerstoert}@${player2_zerstoert}@${battleShips_Amount}@${submarines_Amount}@${cruisers_Amount}@${player1_fleet.shipsPos}@${player2_fleet.shipsPos}@${player1.shots}@${player2.shots}@${player1.takenshots}@${player2.takenshots}@${gameName}@${player1_fleet_orig.shipsPos}@${player2_fleet_orig.shipsPos}@${player1.noHits}@${player2.noHits}@${player1.hits}@${player2.hits}@${player1_dead}@${player2_dead}")
     file.close()
@@ -906,8 +905,8 @@ class welcomeFXController extends Initializable {
     mediaPlayerGame.play()
 
 
-    val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
-    val wayToFile = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
+
+    val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
 
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/lastBattle.txt")
