@@ -92,7 +92,7 @@ class welcomeFXController extends Initializable {
   var soundHit: Media = new Media(new File(musicFileHit).toURI().toString)
   var mediaPlayerHit: MediaPlayer = new MediaPlayer(soundHit)
 
-  var musicFileMiss: String = "src/main/resources/sounds/Torpedo_Missed.mp3"
+  var musicFileMiss: String = "src/main/resources/sounds/Video_Game_Splash-Ploor-699235037.mp3"
   var soundMiss: Media = new Media(new File(musicFileMiss).toURI().toString)
   var mediaPlayerMiss: MediaPlayer = new MediaPlayer(soundMiss)
 
@@ -1013,7 +1013,7 @@ class welcomeFXController extends Initializable {
   def battleName(): String = {
     val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "")
     var list2: List[String] = List(" of ", " for ", "")
-    var list3: List[String] = List("the ","Lost","Eternal","Last ", "", "")
+    var list3: List[String] = List("the ","Lost ","Eternal ","Last ", "", "")
     var list5: List[String] = List("Glory", "Victory", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
 
     def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String]): String = {
