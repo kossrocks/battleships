@@ -342,9 +342,9 @@
             <AnchorPane fx:id="scoretable" layoutX="32.0" layoutY="33.0" prefHeight="200.0" prefWidth="200.0" />
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="credits" layoutX="20.0" layoutY="20.0" prefHeight="500.0" prefWidth="600.0" styleClass="background-welcome-ohne" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane fx:id="credits" layoutX="20.0" layoutY="20.0" prefHeight="500.0" prefWidth="600.0" styleClass="background-credits" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#gotoMenu" styleClass="btn-home" prefHeight="30.0" prefWidth="30.0" text="" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="35.0" />
+                <Button mnemonicParsing="false" onAction="#gotoMenu" prefHeight="30.0" prefWidth="30.0" styleClass="btn-home" text="" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="35.0" />
             <Label layoutX="230.0" layoutY="50.0" text="Credits">
                <font>
                   <Font name="Impact" size="36.0" />

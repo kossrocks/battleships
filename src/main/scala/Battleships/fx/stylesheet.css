@@ -17,6 +17,11 @@
     -fx-background-size: 610px,600px;
 }
 
+.background-credits{
+    -fx-background-color: yellow;
+    -fx-background-image: url("pics/bg-credits.png");
+    -fx-background-size: 610px,600px;
+}
 
 .background-welcome{
     -fx-background-color: yellow;

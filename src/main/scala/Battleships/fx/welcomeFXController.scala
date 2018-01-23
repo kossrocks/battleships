@@ -587,6 +587,8 @@ class welcomeFXController extends Initializable {
   def startgame(starter: Int): Unit = {
     gameStart.setManaged(true)
     gameStart.setVisible(true)
+    savebtn.setVisible(true)
+    savebtn.setManaged(true)
     if (isEven(starter)) { //player 1 ones turn so player 2 Grid is active
       if(player2.name == "Franz"){
         turnLabel.setText(player2.name + " sucks!")
@@ -1001,7 +1003,8 @@ class welcomeFXController extends Initializable {
       player2_Grid.setVisible(false)
       turnLabel.setText(s"${player1.name}´s turn")
     }
-
+    savebtn.setVisible(true)
+    savebtn.setManaged(true)
     player1.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #C43235"))
     player1.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #36403B"))
     player2.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #C43235"))
