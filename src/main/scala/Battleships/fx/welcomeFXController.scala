@@ -881,11 +881,11 @@ class welcomeFXController extends Initializable {
 
     var index: Int = 0
     // Falls das file bereits existiert, wird es nicht überschrieben
-    while (Files.exists(Paths.get(s"${fileName}.txt"))) {
+    while (Files.exists(Paths.get(s"${wayToFile}/${fileName}.txt"))) {
       fileName = origFileName + index
       index += 1
     }
-    val file: PrintWriter = new PrintWriter(new File(s"${fileName}.txt"))
+    val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/${fileName}.txt"))
     file.write(
       s"${player1.name}@${player2.name}@${turn}@${player1_zerstoert}@${player2_zerstoert}@${battleShips_Amount}@${submarines_Amount}@${cruisers_Amount}@${player1_fleet.shipsPos}@${player2_fleet.shipsPos}@${player1.shots}@${player2.shots}@${player1.takenshots}@${player2.takenshots}@${gameName}@${player1_fleet_orig.shipsPos}@${player2_fleet_orig.shipsPos}@${player1.noHits}@${player2.noHits}@${player1.hits}@${player2.hits}@${player1_dead}@${player2_dead}")
     file.close()
