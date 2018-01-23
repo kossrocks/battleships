@@ -1,3 +1,4 @@
+import java.applet.AudioClip
 import java.io.{File, PrintWriter}
 import javafx.event.ActionEvent
 import javafx.scene.layout.{AnchorPane, GridPane, Pane}
@@ -17,6 +18,7 @@ import javafx.scene.control.{ListView, TableColumn, TableView}
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 import javafx.scene.media.{Media, MediaPlayer}
+
 import at.fhj.utils.CanLog
 import java.sql.Date
 
@@ -70,10 +72,41 @@ class welcomeFXController extends Initializable {
   import javafx.scene.media.MediaView
 
   @FXML private val mediaView = null
+  @FXML private var savebtn: Button = _
 
   //Blender
   @FXML private var blenderAnch: AnchorPane = _
   @FXML private var blender: Pane = _
+
+  //Music
+  var musicFileMenu: String = "src/main/resources/sounds/Gameplay_Background_Music.mp3"
+  var soundMenu: Media = new Media(new File(musicFileMenu).toURI().toString)
+  var mediaPlayermenu: MediaPlayer = new MediaPlayer(soundMenu)
+  mediaPlayermenu.setCycleCount(100)
+
+  var musicFileSplash: String = "src/main/resources/sounds/Splashscreen.mp3"
+  var soundSplash: Media = new Media(new File(musicFileSplash).toURI().toString)
+  var mediaPlayerSplash: MediaPlayer = new MediaPlayer(soundSplash)
+
+  var musicFileHit: String = "src/main/resources/sounds/Torpedo_Explosion.mp3"
+  var soundHit: Media = new Media(new File(musicFileHit).toURI().toString)
+  var mediaPlayerHit: MediaPlayer = new MediaPlayer(soundHit)
+
+  var musicFileMiss: String = "src/main/resources/sounds/Torpedo_Missed.mp3"
+  var soundMiss: Media = new Media(new File(musicFileMiss).toURI().toString)
+  var mediaPlayerMiss: MediaPlayer = new MediaPlayer(soundMiss)
+
+  var musicFileEnd: String = "src/main/resources/sounds/Highscore_Background_Music.mp3"
+  var soundEnd: Media = new Media(new File(musicFileEnd).toURI().toString)
+  var mediaPlayerEnd: MediaPlayer = new MediaPlayer(soundEnd)
+  mediaPlayerEnd.setCycleCount(100)
+
+  var musicFileGame: String = "src/main/resources/sounds/General_Background_Music.mp3"
+  var soundGame: Media = new Media(new File(musicFileGame).toURI().toString)
+  var mediaPlayerGame: MediaPlayer = new MediaPlayer(soundGame)
+  mediaPlayerGame.setCycleCount(100)
+
+
 
   //Save our setupinfoin these vars
   var battleField_Size: Int = _
@@ -116,6 +149,7 @@ class welcomeFXController extends Initializable {
   override def initialize(url: URL, rb: ResourceBundle): Unit = initGame()
 
   def initGame(): Unit = {
+    mediaPlayermenu.play()
     //Hide Start screen
     rootpane.setVisible(false)
     rootpane.setManaged(false)
@@ -141,10 +175,14 @@ class welcomeFXController extends Initializable {
   }
 
   @FXML private def startMenu(event: MouseEvent): Unit = {
+    mediaPlayerSplash.play()
+    println(s"${mediaPlayermenu.getStatus()}")
+
     vidpane.setVisible(false)
     vidpane.setManaged(false)
     rootpane.setVisible(true)
     rootpane.setManaged(true)
+
   }
 
   @FXML private def startSetup(event: ActionEvent): Unit = {
@@ -175,6 +213,14 @@ class welcomeFXController extends Initializable {
   }
 
   @FXML private def gotoMenu(event: ActionEvent): Unit = {
+    if(s"${mediaPlayerGame.getStatus()}" == "PLAYING"){
+    mediaPlayerGame.stop()
+    mediaPlayermenu.play()
+    }else if(s"${mediaPlayerEnd.getStatus()}" == "PLAYING"){
+      mediaPlayerEnd.stop()
+      mediaPlayermenu.play()
+    }
+
     //reset Anchorpanes
     rootpane.setVisible(true)
     rootpane.setManaged(true)
@@ -319,9 +365,13 @@ class welcomeFXController extends Initializable {
     else if (player2_submarines + player2_cruisers + player2_battleships == 0) {
       player1_fleet_orig.shipsPos = player1_fleet.shipsPos  //FOR LOADING FUNCTION
       player2_fleet_orig.shipsPos = player2_fleet.shipsPos
+      mediaPlayermenu.stop()
+      mediaPlayerGame.play()
       prepGame()
     }
     else setupLabel.setText("Place all ships to confirm!")
+
+
   }
 
   @FXML private def getcord(event: MouseEvent): Unit = {
@@ -574,9 +624,13 @@ class welcomeFXController extends Initializable {
         case 1 => {
           println("You hit a ship")
           node.setStyle("-fx-background-color: #C43235")
+          mediaPlayerHit.stop()
+          mediaPlayerHit.play()
         }
         case 2 => {
           println("You destroyed a ship!")
+          mediaPlayerHit.stop()
+          mediaPlayerHit.play()
           node.setStyle("-fx-background-color: #C43235")
           player1_zerstoert += 1
           if (player1_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
@@ -586,6 +640,8 @@ class welcomeFXController extends Initializable {
         }
         case 3 => {
           println("You missed")
+          mediaPlayerMiss.stop()
+          mediaPlayerMiss.play()
           node.setStyle("-fx-background-color: #36403B")
           player1_Grid.setManaged(false)
           player1_Grid.setVisible(false)
@@ -610,10 +666,14 @@ class welcomeFXController extends Initializable {
         }
         case 1 => {
           println("You hit a ship")
+          mediaPlayerHit.stop()
+          mediaPlayerHit.play()
           node.setStyle("-fx-background-color: #C43235")
         }
         case 2 => {
           println("You destroyed a ship!")
+          mediaPlayerHit.stop()
+          mediaPlayerHit.play()
           node.setStyle("-fx-background-color: #C43235")
           player2_zerstoert += 1
           if (player2_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
@@ -623,6 +683,8 @@ class welcomeFXController extends Initializable {
         }
         case 3 => {
           println("You missed")
+          mediaPlayerMiss.stop()
+          mediaPlayerMiss.play()
           node.setStyle("-fx-background-color: #36403B")
           //versteck die das jetzige gridpane zeig das neue gg
           player1_Grid.setManaged(true)
@@ -641,12 +703,17 @@ class welcomeFXController extends Initializable {
     player1_Grid.setVisible(false)
     player2_Grid.setManaged(false)
     player2_Grid.setVisible(false)
+    savebtn.setVisible(false)
+    savebtn.setManaged(false)
+
     if (i == 0) {
       turnLabel.setText(player1.name + " won!")
     }
     else {
       turnLabel.setText(player2.name + " won!")
     }
+    mediaPlayerGame.stop()
+    mediaPlayerEnd.play()
     lastSave()
   }
 
@@ -832,6 +899,10 @@ class welcomeFXController extends Initializable {
 
   //load function
   def load(): Unit = {
+    mediaPlayermenu.stop()
+    mediaPlayerGame.play()
+
+
     val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
     val wayToFile = mkFilePath(filePath1.slice(1, filePath1.length - 4)).tail + "/src/main/resources/Saves"
 
