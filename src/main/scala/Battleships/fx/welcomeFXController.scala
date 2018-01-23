@@ -286,14 +286,15 @@ class welcomeFXController extends Initializable {
     if (battleShips.getText.isEmpty && cruisers.getText.isEmpty && submarines.getText.isEmpty) setupError.setText("You need ships to fight, fools!")
     else if (!isAllDigits(battleShips.getText) || !isAllDigits(cruisers.getText) || !isAllDigits(submarines.getText)) setupError.setText("Use numbers for the amount of ships, landlubber!")
     else if (player1Name.getText.isEmpty || player2Name.getText.isEmpty) setupError.setText("You do not even know your own names?")
-    else if (player1Name.getText.length > 10 || player2Name.getText.length > 10) setupError.setText("Use shorter names, you cannot remember the long ones!")
+    else if (player1Name.getText.length > 8 || player2Name.getText.length > 10) setupError.setText("Use shorter names, you cannot remember the long ones!")
     else if (battleShips.getText.isEmpty || cruisers.getText.isEmpty || submarines.getText.isEmpty) setupError.setText("Do not leave any holes, your ships will be full of them!")
     else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt == 0) setupError.setText("You need ships to fight, fools!")
     else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt >= 7) setupError.setText("No more than 7 ships, greedy bastard!")
-    else if (player1Name.getText == player2Name.getText) setupError.setText("Use different Names")
+    else if (player1Name.getText == player2Name.getText) setupError.setText("Use two different names! No copycats allowed!")
     else {
       println("Loading Game")
       //FETCH OUR SETTINGS
+      setupError.setText("")
       battleShips_Amount = battleShips.getText.toInt
       cruisers_Amount = cruisers.getText.toInt
       submarines_Amount = submarines.getText.toInt
@@ -857,7 +858,7 @@ class welcomeFXController extends Initializable {
   //reset Scoreboard
   def reset(): Unit = {
     if (resetIt == 0) {
-      resettext.setText("löschen?")
+      resettext.setText("delete?")
       resetIt += 1
     } else {
       val filePath1: Array[String] = s"${getClass.getClassLoader.getResource("Saves").getPath}".split("/")
