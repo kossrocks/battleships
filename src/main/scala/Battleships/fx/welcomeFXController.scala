@@ -16,7 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.control.{ListView, TableColumn, TableView}
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
-
+import javafx.scene.media.{Media, MediaPlayer}
 import at.fhj.utils.CanLog
 import java.sql.Date
 
@@ -31,7 +31,10 @@ class welcomeFXController extends Initializable {
   @FXML private var setupgame: AnchorPane = _
   @FXML private var game: AnchorPane = _
   @FXML private var scoreboard: AnchorPane = _
+  @FXML private var scoretable: AnchorPane = _
   @FXML private var credits: AnchorPane = _
+  @FXML private var vidpane: AnchorPane = _
+
 
   //Our Setupfields and Button
   @FXML private var battleNameLabel: Label = _
@@ -54,12 +57,19 @@ class welcomeFXController extends Initializable {
   @FXML private var placeCruiser: Button = _
   @FXML private var placeSubmarine: Button = _
   @FXML private var dirBtn: Button = _
+  @FXML private var confBtn: Button = _
 
   //BattleGridPanes and needed fields
   @FXML private var gameStart: AnchorPane = _
   @FXML private var player1_Grid: GridPane = _
   @FXML private var player2_Grid: GridPane = _
   @FXML private var turnLabel: Label = _
+
+  //Video player
+  import javafx.fxml.FXML
+  import javafx.scene.media.MediaView
+
+  @FXML private val mediaView = null
 
   //Blender
   @FXML private var blenderAnch: AnchorPane = _
@@ -106,6 +116,9 @@ class welcomeFXController extends Initializable {
   override def initialize(url: URL, rb: ResourceBundle): Unit = initGame()
 
   def initGame(): Unit = {
+    //Hide Start screen
+    rootpane.setVisible(false)
+    rootpane.setManaged(false)
     //HIDE OUR OTHER STATES
     setupgame.setVisible(false)
     setupgame.setManaged(false)
@@ -120,9 +133,18 @@ class welcomeFXController extends Initializable {
     //Hide Scoreboard
     scoreboard.setVisible(false)
     scoreboard.setManaged(false)
+    scoretable.setVisible(false)
+    scoretable.setManaged(false)
     //Hide Credits
     credits.setVisible(false)
     credits.setManaged(false)
+  }
+
+  @FXML private def startMenu(event: MouseEvent): Unit = {
+    vidpane.setVisible(false)
+    vidpane.setManaged(false)
+    rootpane.setVisible(true)
+    rootpane.setManaged(true)
   }
 
   @FXML private def startSetup(event: ActionEvent): Unit = {
@@ -140,6 +162,8 @@ class welcomeFXController extends Initializable {
     rootpane.setManaged(false)
     scoreboard.setVisible(true)
     scoreboard.setManaged(true)
+    scoretable.setVisible(true)
+    scoretable.setManaged(true)
     mkScoreboard()
   }
 
@@ -164,6 +188,8 @@ class welcomeFXController extends Initializable {
     blenderAnch.setManaged(false)
     scoreboard.setVisible(false)
     scoreboard.setManaged(false)
+    scoretable.setVisible(false)
+    scoretable.setManaged(false)
     credits.setVisible(false)
     credits.setManaged(false)
 
@@ -286,6 +312,16 @@ class welcomeFXController extends Initializable {
         shipDirection = 0
       }
     }
+  }
+
+  @FXML private def confirm(event: ActionEvent): Unit = {
+    if (player1_submarines + player1_cruisers + player1_battleships == 0 && setupStatus == 1 ) changePlayerSetup()
+    else if (player2_submarines + player2_cruisers + player2_battleships == 0) {
+      player1_fleet_orig.shipsPos = player1_fleet.shipsPos  //FOR LOADING FUNCTION
+      player2_fleet_orig.shipsPos = player2_fleet.shipsPos
+      prepGame()
+    }
+    else setupLabel.setText("Place all ships to confirm!")
   }
 
   @FXML private def getcord(event: MouseEvent): Unit = {
@@ -419,7 +455,7 @@ class welcomeFXController extends Initializable {
           }
         }
       }
-      if (player1_submarines + player1_cruisers + player1_battleships == 0) changePlayerSetup()
+      //if (player1_submarines + player1_cruisers + player1_battleships == 0) changePlayerSetup()
     }
     else { //setupstatus is not one and this function gets called means player 2 is setting up
       length match {
@@ -436,12 +472,9 @@ class welcomeFXController extends Initializable {
           placeSubmarine.setText("Submarines: " + player2_submarines.toString)
         }
       }
-      if (player2_submarines + player2_cruisers + player2_battleships == 0) {
-        player1_fleet_orig.shipsPos = player1_fleet.shipsPos //FOR LOADING FUNCTION
-        player2_fleet_orig.shipsPos = player2_fleet.shipsPos
+      /*if (player2_submarines + player2_cruisers + player2_battleships == 0) {
         prepGame()
-
-      }
+      }*/
     }
   }
 
@@ -450,9 +483,9 @@ class welcomeFXController extends Initializable {
     var node = event.getSource().toString.take(22)
     if (node == "Button[id=placeBattle,") {
       length = 5
-      placeBattle.setStyle("-fx-text-fill: #AE6619") //change text color when button is selected
+      placeBattle.setStyle("-fx-text-fill: #AE6619")        //change text color when button is selected
       placeCruiser.setStyle("-fx-text-fill: #C4A03E")
-      placeCruiser.setStyle("-fx-text-fill: #C4A03E")
+      placeSubmarine.setStyle("-fx-text-fill: #C4A03E")
     }
     if (node == "Button[id=placeCruiser") {
       length = 3
@@ -486,7 +519,7 @@ class welcomeFXController extends Initializable {
     val starter = scala.util.Random
     gameStatus = starter.nextInt(2) //kann 0 oder eins annehmen //wir könnten damit alle wenn gerade player 1 wenn ungerade player 2 für wer ist gerade dran
     turn = gameStatus
-    startgame(gameStatus)/
+    startgame(gameStatus)
   }
 
   //just a small helper for small people
@@ -742,10 +775,12 @@ class welcomeFXController extends Initializable {
 
     highscoreTable.setItems(FXCollections.observableArrayList(date.asJava))
     highscoreTable.getColumns.addAll(colDate, colBattleName, colWinner, colRounds, colReplay)
-    highscoreTable.setMinHeight(500)
+    highscoreTable.setMinHeight(450)
     highscoreTable.setMinWidth(420)
     highscoreTable.setMaxWidth(482)
-    scoreboard.getChildren.add(highscoreTable)
+
+    scoretable.getChildren.add(highscoreTable)
+
 
 
   }
@@ -907,7 +942,7 @@ class welcomeFXController extends Initializable {
   def battleName(): String = {
     val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "")
     var list2: List[String] = List(" of ", " for ", "")
-    var list3: List[String] = List("the ","Lost","Eternal","Everlasting", "", "")
+    var list3: List[String] = List("the ","Lost","Eternal","Last ", "", "")
     var list5: List[String] = List("Glory", "Victory", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
 
     def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String]): String = {
