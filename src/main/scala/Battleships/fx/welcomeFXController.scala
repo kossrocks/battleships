@@ -737,6 +737,11 @@ class welcomeFXController extends Initializable {
 
     val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
+    if (Files.notExists(Paths.get(s"${wayToFile}/Highscore.txt"))){
+      val file1: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
+      file1.write("")
+      file1.close()
+    }
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
     val oldHighscores: String = lastBattleFile.getLines().mkString
     lastBattleFile.close()
@@ -785,7 +790,11 @@ class welcomeFXController extends Initializable {
     }
 
     val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
-
+    if (Files.notExists(Paths.get(s"${wayToFile}/Highscore.txt"))){
+      val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
+      file.write("")
+      file.close()
+    }
     val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/Highscore.txt")
     val stringOfBattle: String = lastBattleFile.getLines().mkString
     lastBattleFile.close()
