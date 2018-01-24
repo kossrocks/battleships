@@ -107,7 +107,6 @@ class welcomeFXController extends Initializable {
   mediaPlayerGame.setCycleCount(100)
 
 
-
   //Save our setupinfoin these vars
   var battleField_Size: Int = _
   var battleShips_Amount: Int = _
@@ -213,10 +212,10 @@ class welcomeFXController extends Initializable {
   }
 
   @FXML private def gotoMenu(event: ActionEvent): Unit = {
-    if(s"${mediaPlayerGame.getStatus()}" == "PLAYING"){
-    mediaPlayerGame.stop()
-    mediaPlayermenu.play()
-    }else if(s"${mediaPlayerEnd.getStatus()}" == "PLAYING"){
+    if (s"${mediaPlayerGame.getStatus()}" == "PLAYING") {
+      mediaPlayerGame.stop()
+      mediaPlayermenu.play()
+    } else if (s"${mediaPlayerEnd.getStatus()}" == "PLAYING") {
       mediaPlayerEnd.stop()
       mediaPlayermenu.play()
     }
@@ -362,9 +361,9 @@ class welcomeFXController extends Initializable {
   }
 
   @FXML private def confirm(event: ActionEvent): Unit = {
-    if (player1_submarines + player1_cruisers + player1_battleships == 0 && setupStatus == 1 ) changePlayerSetup()
+    if (player1_submarines + player1_cruisers + player1_battleships == 0 && setupStatus == 1) changePlayerSetup()
     else if (player2_submarines + player2_cruisers + player2_battleships == 0) {
-      player1_fleet_orig.shipsPos = player1_fleet.shipsPos  //FOR LOADING FUNCTION
+      player1_fleet_orig.shipsPos = player1_fleet.shipsPos //FOR LOADING FUNCTION
       player2_fleet_orig.shipsPos = player2_fleet.shipsPos
       mediaPlayermenu.stop()
       mediaPlayerGame.play()
@@ -534,7 +533,7 @@ class welcomeFXController extends Initializable {
     var node = event.getSource().toString.take(22)
     if (node == "Button[id=placeBattle,") {
       length = 5
-      placeBattle.setStyle("-fx-text-fill: #AE6619")        //change text color when button is selected
+      placeBattle.setStyle("-fx-text-fill: #AE6619") //change text color when button is selected
       placeCruiser.setStyle("-fx-text-fill: #C4A03E")
       placeSubmarine.setStyle("-fx-text-fill: #C4A03E")
     }
@@ -591,9 +590,9 @@ class welcomeFXController extends Initializable {
     savebtn.setVisible(true)
     savebtn.setManaged(true)
     if (isEven(starter)) { //player 1 ones turn so player 2 Grid is active
-      if(player2.name == "Franz"){
+      if (player2.name == "Franz") {
         turnLabel.setText(player2.name + " sucks!")
-      }else {
+      } else {
         turnLabel.setText(player2.name + " starts!")
       }
       player1_Grid.setManaged(false)
@@ -602,9 +601,9 @@ class welcomeFXController extends Initializable {
       player2_Grid.setVisible(true)
     }
     if (!isEven(starter)) { //player 2 ones turn so player 1 Grid is active
-      if(player1.name == "Franz"){
+      if (player1.name == "Franz") {
         turnLabel.setText(player1.name + " sucks!")
-      }else {
+      } else {
         turnLabel.setText(player1.name + " starts!")
       }
       player1_Grid.setManaged(true)
@@ -737,7 +736,7 @@ class welcomeFXController extends Initializable {
 
     val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
-    if (Files.notExists(Paths.get(s"${wayToFile}/Highscore.txt"))){
+    if (Files.notExists(Paths.get(s"${wayToFile}/Highscore.txt"))) {
       val file1: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
       file1.write("")
       file1.close()
@@ -790,7 +789,7 @@ class welcomeFXController extends Initializable {
     }
 
     val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
-    if (Files.notExists(Paths.get(s"${wayToFile}/Highscore.txt"))){
+    if (Files.notExists(Paths.get(s"${wayToFile}/Highscore.txt"))) {
       val file: PrintWriter = new PrintWriter(new File(s"${wayToFile}/Highscore.txt"))
       file.write("")
       file.close()
@@ -860,7 +859,6 @@ class welcomeFXController extends Initializable {
     scoretable.getChildren.add(highscoreTable)
 
 
-
   }
 
   //reset Scoreboard
@@ -910,122 +908,121 @@ class welcomeFXController extends Initializable {
 
   //load function
   def load(): Unit = {
-    mediaPlayermenu.stop()
-    mediaPlayerGame.play()
-
-
-
     val wayToFile: String = new java.io.File(".").getCanonicalPath + "/src/main/Saves"
 
-
-    val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/lastBattle.txt")
-    val lastBattle: String = lastBattleFile.getLines().mkString
-    lastBattleFile.close()
-    val file: BufferedSource = Source.fromFile(s"${wayToFile}/${lastBattle}.txt")
-    val content: Array[String] = file.getLines().mkString.split("@")
-    file.close()
+    if (Files.exists(Paths.get(s"${wayToFile}/lastBattle.txt"))) {
+      mediaPlayermenu.stop()
+      mediaPlayerGame.play()
 
 
-    player1.name = content(0)
-    player2.name = content(1)
-    turn = content(2).toInt
-    player1_zerstoert = content(3).toInt
-    player2_zerstoert = content(4).toInt
-    battleShips_Amount = content(5).toInt
-    submarines_Amount = content(6).toInt
-    cruisers_Amount = content(7).toInt
-    player1_fleet = mkListOfListOfPos(content(8))
-    player2_fleet = mkListOfListOfPos(content(9))
-    player1.shots = mkListOfPos(mkSeqString(content(10)))
-    player2.shots = mkListOfPos(mkSeqString(content(11)))
-    player1.takenshots = content(12).toInt
-    player2.takenshots = content(13).toInt
-    gameName = content(14)
-    player1_fleet_orig = mkListOfListOfPos(content(15))
-    player2_fleet_orig = mkListOfListOfPos(content(16))
-    player1.noHits = mkListOfPos(mkSeqString(content(17))).filter(_ != Position(0, 0))
-    player2.noHits = mkListOfPos(mkSeqString(content(18))).filter(_ != Position(0, 0))
-    player1.hits = mkListOfPos(mkSeqString(content(19))).filter(_ != Position(0, 0))
-    player2.hits = mkListOfPos(mkSeqString(content(20))).filter(_ != Position(0, 0))
-    player1_dead = content(21).toInt
-    player2_dead = content(22).toInt
+      val lastBattleFile: BufferedSource = Source.fromFile(s"${wayToFile}/lastBattle.txt")
+      val lastBattle: String = lastBattleFile.getLines().mkString
+      lastBattleFile.close()
+      val file: BufferedSource = Source.fromFile(s"${wayToFile}/${lastBattle}.txt")
+      val content: Array[String] = file.getLines().mkString.split("@")
+      file.close()
 
-    def mkListOfPos(seq: Seq[String]): List[Position] = {
-      var index = 0
-      var seqOfX: Seq[Int] = Seq[Int]()
-      var seqOfY: Seq[Int] = Seq[Int]()
-      var ListOfPos: List[Position] = List[Position]()
-      while (index < seq.size) {
-        if (index % 2 == 0) {
-          seqOfX = seqOfX :+ seq(index).toInt
+
+      player1.name = content(0)
+      player2.name = content(1)
+      turn = content(2).toInt
+      player1_zerstoert = content(3).toInt
+      player2_zerstoert = content(4).toInt
+      battleShips_Amount = content(5).toInt
+      submarines_Amount = content(6).toInt
+      cruisers_Amount = content(7).toInt
+      player1_fleet = mkListOfListOfPos(content(8))
+      player2_fleet = mkListOfListOfPos(content(9))
+      player1.shots = mkListOfPos(mkSeqString(content(10)))
+      player2.shots = mkListOfPos(mkSeqString(content(11)))
+      player1.takenshots = content(12).toInt
+      player2.takenshots = content(13).toInt
+      gameName = content(14)
+      player1_fleet_orig = mkListOfListOfPos(content(15))
+      player2_fleet_orig = mkListOfListOfPos(content(16))
+      player1.noHits = mkListOfPos(mkSeqString(content(17))).filter(_ != Position(0, 0))
+      player2.noHits = mkListOfPos(mkSeqString(content(18))).filter(_ != Position(0, 0))
+      player1.hits = mkListOfPos(mkSeqString(content(19))).filter(_ != Position(0, 0))
+      player2.hits = mkListOfPos(mkSeqString(content(20))).filter(_ != Position(0, 0))
+      player1_dead = content(21).toInt
+      player2_dead = content(22).toInt
+
+      def mkListOfPos(seq: Seq[String]): List[Position] = {
+        var index = 0
+        var seqOfX: Seq[Int] = Seq[Int]()
+        var seqOfY: Seq[Int] = Seq[Int]()
+        var ListOfPos: List[Position] = List[Position]()
+        while (index < seq.size) {
+          if (index % 2 == 0) {
+            seqOfX = seqOfX :+ seq(index).toInt
+            index += 1
+          }
+          else {
+            seqOfY = seqOfY :+ seq(index).toInt
+            index += 1
+          }
+        }
+        index = 0
+
+        while (index < seqOfX.size) {
+          ListOfPos = Position(seqOfX(index), seqOfY(index)) :: ListOfPos
           index += 1
         }
-        else {
-          seqOfY = seqOfY :+ seq(index).toInt
+        ListOfPos
+      }
+
+      def mkListOfListOfPos(string: String): Fleet = {
+        var arrayString: Array[String] = string.split("List")
+        var listOfListOfPos: List[List[Position]] = List[List[Position]]()
+        var fleet: Fleet = new Fleet(List(List(Position(0, 0))))
+        var index = 1
+
+        arrayString = arrayString.slice(2, arrayString.length)
+        arrayString = arrayString.map(_.filter(_.isDigit))
+
+        while (index < arrayString.length) {
+          listOfListOfPos = mkListOfPos(arrayString(index).map(_ + "")) :: listOfListOfPos
           index += 1
         }
-      }
-      index = 0
 
-      while (index < seqOfX.size) {
-        ListOfPos = Position(seqOfX(index), seqOfY(index)) :: ListOfPos
-        index += 1
-      }
-      ListOfPos
-    }
-
-    def mkListOfListOfPos(string: String): Fleet = {
-      var arrayString: Array[String] = string.split("List")
-      var listOfListOfPos: List[List[Position]] = List[List[Position]]()
-      var fleet: Fleet = new Fleet(List(List(Position(0, 0))))
-      var index = 1
-
-      arrayString = arrayString.slice(2, arrayString.length)
-      arrayString = arrayString.map(_.filter(_.isDigit))
-
-      while (index < arrayString.length) {
-        listOfListOfPos = mkListOfPos(arrayString(index).map(_ + "")) :: listOfListOfPos
-        index += 1
+        fleet.addShip(listOfListOfPos)
+        fleet
       }
 
-      fleet.addShip(listOfListOfPos)
-      fleet
-    }
+      def mkSeqString(string: String): Seq[String] = {
+        var seqString: Seq[String] = string.filter(_.isDigit).map(_ + "")
+        seqString
+      }
 
-    def mkSeqString(string: String): Seq[String] = {
-      var seqString: Seq[String] = string.filter(_.isDigit).map(_ + "")
-      seqString
+      gameStart.setManaged(true)
+      gameStart.setVisible(true)
+      if (isEven(turn)) {
+        player2_Grid.setManaged(true)
+        player2_Grid.setVisible(true)
+        player1_Grid.setManaged(false)
+        player1_Grid.setVisible(false)
+        turnLabel.setText(s"${player2.name}´s turn")
+      } else {
+        player1_Grid.setManaged(true)
+        player1_Grid.setVisible(true)
+        player2_Grid.setManaged(false)
+        player2_Grid.setVisible(false)
+        turnLabel.setText(s"${player1.name}´s turn")
+      }
+      savebtn.setVisible(true)
+      savebtn.setManaged(true)
+      player1.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #C43235"))
+      player1.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #36403B"))
+      player2.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #C43235"))
+      player2.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #36403B"))
     }
-
-    gameStart.setManaged(true)
-    gameStart.setVisible(true)
-    if (isEven(turn)) {
-      player2_Grid.setManaged(true)
-      player2_Grid.setVisible(true)
-      player1_Grid.setManaged(false)
-      player1_Grid.setVisible(false)
-      turnLabel.setText(s"${player2.name}´s turn")
-    } else {
-      player1_Grid.setManaged(true)
-      player1_Grid.setVisible(true)
-      player2_Grid.setManaged(false)
-      player2_Grid.setVisible(false)
-      turnLabel.setText(s"${player1.name}´s turn")
-    }
-    savebtn.setVisible(true)
-    savebtn.setManaged(true)
-    player1.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #C43235"))
-    player1.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #36403B"))
-    player2.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #C43235"))
-    player2.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #36403B"))
-
 
   }
 
   def battleName(): String = {
     val list1: List[String] = List("Battle", "War", "Fight", "Dispute", "")
     var list2: List[String] = List(" of ", " for ", "")
-    var list3: List[String] = List("the ","Lost ","Eternal ","Last ", "", "")
+    var list3: List[String] = List("the ", "Lost ", "Eternal ", "Last ", "", "")
     var list5: List[String] = List("Glory", "Victory", "Justice", "Dreams", "Night", "City", "Bread", "Rock", "Mountain", "")
 
     def randomName(list1: List[String], list2: List[String], list3: List[String], list4: List[String]): String = {
