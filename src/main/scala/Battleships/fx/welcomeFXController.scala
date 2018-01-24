@@ -46,8 +46,9 @@ class welcomeFXController extends Initializable {
   @FXML private var cruisers: TextField = _
   @FXML private var submarines: TextField = _
   @FXML private var resettext: Label = _
-  @FXML private var confirm: Button = _
   @FXML private var setupError: Label = _
+  @FXML private var saveBtn: Button = _
+  @FXML private var confirm: Button = _
 
   //OUR GAME COMPONENTS
   @FXML private var player: Label = _
@@ -66,13 +67,15 @@ class welcomeFXController extends Initializable {
   @FXML private var player1_Grid: GridPane = _
   @FXML private var player2_Grid: GridPane = _
   @FXML private var turnLabel: Label = _
-
+  @FXML private var remainBS: Label = _
+  @FXML private var remainCR: Label = _
+  @FXML private var remainSM: Label = _
+  @FXML private var endScreen: Pane = _
   //Video player
   import javafx.fxml.FXML
   import javafx.scene.media.MediaView
 
   @FXML private val mediaView = null
-  @FXML private var savebtn: Button = _
 
   //Blender
   @FXML private var blenderAnch: AnchorPane = _
@@ -160,9 +163,6 @@ class welcomeFXController extends Initializable {
     //game Starting
     gameStart.setVisible(false)
     gameStart.setManaged(false)
-    //Disable our Blenders
-    blenderAnch.setVisible(false) //SIND JZ DISABLED bind ma noch a funktion dran digga
-    blenderAnch.setManaged(false)
     //Hide Scoreboard
     scoreboard.setVisible(false)
     scoreboard.setManaged(false)
@@ -175,7 +175,6 @@ class welcomeFXController extends Initializable {
 
   @FXML private def startMenu(event: MouseEvent): Unit = {
     mediaPlayerSplash.play()
-    println(s"${mediaPlayermenu.getStatus()}")
 
     vidpane.setVisible(false)
     vidpane.setManaged(false)
@@ -229,8 +228,6 @@ class welcomeFXController extends Initializable {
     game.setManaged(false)
     gameStart.setVisible(false)
     gameStart.setManaged(false)
-    blenderAnch.setVisible(false)
-    blenderAnch.setManaged(false)
     scoreboard.setVisible(false)
     scoreboard.setManaged(false)
     scoretable.setVisible(false)
@@ -370,8 +367,6 @@ class welcomeFXController extends Initializable {
       prepGame()
     }
     else setupLabel.setText("Place all ships to confirm!")
-
-
   }
 
   @FXML private def getcord(event: MouseEvent): Unit = {
@@ -587,8 +582,9 @@ class welcomeFXController extends Initializable {
   def startgame(starter: Int): Unit = {
     gameStart.setManaged(true)
     gameStart.setVisible(true)
-    savebtn.setVisible(true)
-    savebtn.setManaged(true)
+    saveBtn.setVisible(true)
+    saveBtn.setManaged(true)
+    endScreen.setVisible(false)
     if (isEven(starter)) { //player 1 ones turn so player 2 Grid is active
       if (player2.name == "Franz") {
         turnLabel.setText(player2.name + " sucks!")
@@ -599,8 +595,12 @@ class welcomeFXController extends Initializable {
       player1_Grid.setVisible(false)
       player2_Grid.setManaged(true)
       player2_Grid.setVisible(true)
+      remainBS.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),0).toString+ "   ")
+      remainCR.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),1).toString+ "   ")
+      remainSM.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),2).toString+ "   ")
+
     }
-    if (!isEven(starter)) { //player 2 ones turn so player 1 Grid is active
+    else { //player 2 ones turn so player 1 Grid is active
       if (player1.name == "Franz") {
         turnLabel.setText(player1.name + " sucks!")
       } else {
@@ -610,6 +610,9 @@ class welcomeFXController extends Initializable {
       player1_Grid.setVisible(true)
       player2_Grid.setManaged(false)
       player2_Grid.setVisible(false)
+      remainBS.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),0).toString+ "   ")
+      remainCR.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),1).toString+ "   ")
+      remainSM.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),2).toString+ "   ")
     }
   }
 
@@ -635,6 +638,9 @@ class welcomeFXController extends Initializable {
           mediaPlayerHit.play()
           node.setStyle("-fx-background-color: #C43235")
           player1_zerstoert += 1
+          remainBS.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),0).toString+ "   ")
+          remainCR.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),1).toString+ "   ")
+          remainSM.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),2).toString+ "   ")
           if (player1_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
             player2_dead += 1
             end(0)
@@ -645,6 +651,9 @@ class welcomeFXController extends Initializable {
           mediaPlayerMiss.stop()
           mediaPlayerMiss.play()
           node.setStyle("-fx-background-color: #36403B")
+          remainBS.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),0).toString+ "   ")
+          remainCR.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),1).toString+ "   ")
+          remainSM.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),2).toString+ "   ")
           player1_Grid.setManaged(false)
           player1_Grid.setVisible(false)
           player2_Grid.setManaged(true)
@@ -678,6 +687,9 @@ class welcomeFXController extends Initializable {
           mediaPlayerHit.play()
           node.setStyle("-fx-background-color: #C43235")
           player2_zerstoert += 1
+          remainBS.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),0).toString+ "   ")
+          remainCR.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),1).toString+ "   ")
+          remainSM.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),2).toString+ "   ")
           if (player2_zerstoert == battleShips_Amount + submarines_Amount + cruisers_Amount) {
             player1_dead += 1
             end(1)
@@ -688,6 +700,9 @@ class welcomeFXController extends Initializable {
           mediaPlayerMiss.stop()
           mediaPlayerMiss.play()
           node.setStyle("-fx-background-color: #36403B")
+          remainBS.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),0).toString+ "   ")
+          remainCR.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),1).toString+ "   ")
+          remainSM.setText(getElem(currentShips(player2_fleet_orig.shipsPos,player2_fleet.shipsPos),2).toString+ "   ")
           //versteck die das jetzige gridpane zeig das neue gg
           player1_Grid.setManaged(true)
           player1_Grid.setVisible(true)
@@ -705,9 +720,12 @@ class welcomeFXController extends Initializable {
     player1_Grid.setVisible(false)
     player2_Grid.setManaged(false)
     player2_Grid.setVisible(false)
-    savebtn.setVisible(false)
-    savebtn.setManaged(false)
-
+    endScreen.setVisible(true)
+    remainBS.setVisible(false)
+    remainCR.setVisible(false)
+    remainSM.setVisible(false)
+    saveBtn.setVisible(false)
+    saveBtn.setManaged(false)
     if (i == 0) {
       turnLabel.setText(player1.name + " won!")
     }
@@ -1009,12 +1027,17 @@ class welcomeFXController extends Initializable {
         player2_Grid.setVisible(false)
         turnLabel.setText(s"${player1.name}´s turn")
       }
-      savebtn.setVisible(true)
-      savebtn.setManaged(true)
+      saveBtn.setVisible(true)
+      saveBtn.setManaged(true)
+      endScreen.setVisible(false)
+      endScreen.setManaged(false)
       player1.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #C43235"))
       player1.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #36403B"))
       player2.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #C43235"))
       player2.noHits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player2_Grid).setStyle("-fx-background-color: #36403B"))
+      remainBS.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),0).toString+ "   ")
+      remainCR.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),1).toString+ "   ")
+      remainSM.setText(getElem(currentShips(player1_fleet_orig.shipsPos,player1_fleet.shipsPos),2).toString+ "   ")
     }
 
   }
@@ -1065,7 +1088,45 @@ class welcomeFXController extends Initializable {
       }
     }
   }
+  def currentShips (origFleet :List[List[Position]],fleet : List[List[Position]]) : List[Int] = {
+    var i = origFleet.length
+    var amountBattleships : Int = 0
+    var amountCruisers : Int = 0
+    var amountSubmarines : Int = 0
+    while(i>0){
+      getShip(origFleet,i).length match{
+        case 5 => {
+          if(getShip(fleet,i).length > 0) amountBattleships = amountBattleships +1
+        }
+        case 3 => {
+          if(getShip(fleet,i).length > 0) amountCruisers= amountCruisers +1
+        }
+        case 2 => {
+          if(getShip(fleet,i).length > 0) amountSubmarines= amountSubmarines +1
+        }
+        case 1 =>{
 
+        }
+      }
+      i = i-1
+    }
+    List(amountBattleships,amountCruisers,amountSubmarines)
+  }
+
+  def getShip(list: List[List[Position]],index:Int): List[Position]={
+    index match{
+      case 1 => list.head
+      case _=> getShip(list.tail,index-1)
+    }
+  }
+
+  def getElem(list: List[Any],index:Int): Any={
+    index match{
+      case 0 => list.head
+      case _=> getElem(list.tail,index-1)
+    }
+  }
 }
+
 
 
