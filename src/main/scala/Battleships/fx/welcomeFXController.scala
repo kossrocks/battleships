@@ -1027,8 +1027,12 @@ class welcomeFXController extends Initializable {
         player2_Grid.setVisible(false)
         turnLabel.setText(s"${player1.name}´s turn")
       }
+
       saveBtn.setVisible(true)
       saveBtn.setManaged(true)
+      remainBS.setVisible(true)
+      remainCR.setVisible(true)
+      remainSM.setVisible(true)
       endScreen.setVisible(false)
       endScreen.setManaged(false)
       player1.hits.foreach(coords => getNode(if (coords.x - 1 == 0) null else coords.x - 1, if (coords.y - 1 == 0) null else coords.y - 1, player1_Grid).setStyle("-fx-background-color: #C43235"))
