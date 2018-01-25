@@ -183,6 +183,12 @@
 | 4
 | bug fixing
 
+| jillings
+| 18.1.17
+| 3
+| 5
+| creating test reports
+
 | neumannn16
 | 19.1.17
 | 1
