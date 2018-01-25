@@ -273,4 +273,10 @@
 | 1
 | implement gif for end of game screen
 
+| neumannn16
+| 24.1.17
+| 2
+| 1
+| creating powerpoint presentation
+
 |===
