@@ -335,14 +335,14 @@
                         <Pane prefHeight="200.0" prefWidth="200.0" styleClass="pane-normal" GridPane.columnIndex="6" GridPane.rowIndex="6" />
                     </children>
                 </GridPane>
-            <Pane fx:id="endScreen" layoutX="150.0" layoutY="100.0" onMouseClicked="#startMenu" prefHeight="300.0" prefWidth="300.0" />
+            <Pane fx:id="endScreen" layoutX="150.0" layoutY="120.0" onMouseClicked="#startMenu" prefHeight="300.0" prefWidth="300.0" styleClass="end" />
             </children>
         </AnchorPane>
         <AnchorPane fx:id="scoreboard" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="600.0" styleClass="background-game" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-            <Label fx:id="resettext" layoutX="510.0" layoutY="124.0" prefHeight="18.0" prefWidth="90.0" textAlignment="CENTER" />
-                <Button layoutX="517.0" layoutY="42.0" mnemonicParsing="false" onAction="#gotoMenu" prefHeight="30.0" prefWidth="30.0" styleClass="btn-home" text="" />
-            <Button layoutX="487.0" layoutY="84.0" mnemonicParsing="false" onAction="#reset" prefHeight="30.0" prefWidth="90.0" styleClass="btn-place" text="Reset" />
+            <Label fx:id="resettext" layoutX="523.0" layoutY="124.0" prefHeight="18.0" prefWidth="90.0" textAlignment="CENTER" />
+                <Button layoutX="530.0" layoutY="42.0" mnemonicParsing="false" onAction="#gotoMenu" prefHeight="30.0" prefWidth="30.0" styleClass="btn-home" text="" />
+            <Button layoutX="530.0" layoutY="80.0" mnemonicParsing="false" onAction="#reset" prefHeight="30.0" prefWidth="30.0" styleClass="btn-reset" />
             <AnchorPane fx:id="scoretable" layoutX="32.0" layoutY="33.0" prefHeight="200.0" prefWidth="200.0" />
             </children>
         </AnchorPane>

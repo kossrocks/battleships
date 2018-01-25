@@ -1,0 +1,270 @@
+== Time expenditure: battleship assignment
+
+[cols="1,1,1, 1,4", options="header"]
+.Time expenditure
+|===
+| Student
+| Date
+| Estimated Hours
+| Actual Hours
+| Description
+
+| wachterf16
+| 27.12.17
+| 4
+| 6
+| implement code for edit screen
+
+| wachterf16
+| 28.12.17
+| 5
+| 7
+| implement code for edit screen
+
+| wachterf16
+| 29.12.17
+| 8
+| 8
+| implement code for edit screen
+
+| wachterf16
+| 30.12.17
+| 4
+| 4
+| finished code implementation for edit screen
+
+| paggerdo16
+| 30.12.17
+| 1
+| 1
+| create next player button in scenebuilder and implement code
+
+| wachterf16
+| 2.1.17
+| 7
+| 8
+| implement code for game screen
+
+| wachterf16
+| 3.1.17
+| 4
+| 5
+| implement code for game screen
+
+| wachterf16
+| 5.1.17
+| 6
+| 7
+| finished code for game screen
+
+| wachterf16
+| 6.1.17
+| 3
+| 4
+| implement code for starting the game, and finished it, and finished code implementation for game screen
+
+| paggerdo16
+| 12.1.17
+| 2
+| 1
+| craeting mock ups with balsamiq mockups 3
+
+| neumannn16
+| 13.1.17
+| 1
+| 1
+| write description for mockups
+
+| neumannn16
+| 13.1.17
+| 1
+| 2
+| figure out work packages for project report
+
+| neumannn16
+| 13.1.17
+| 3
+| 4
+| write down project report
+
+| puetzlma16
+| 13.1.17
+| 3
+| 8
+| worked on implementation of saving function
+
+| paggerdo16
+| 13.1.17
+| 5
+| 8
+| creating and designing buttons for edit screen
+
+| jillings17
+| 13.1.17
+| 1
+| 2
+| researching for main theme and music for the game
+
+| jillings17
+| 13.1.17
+| 2
+| 3
+| early testing of the game to find bugs
+
+| paggerdo16
+| 13.1.17
+| 1
+| 1
+| started working on video for splash screen
+
+| wachterf16
+| 13.1.17
+| 3
+| 7
+| bug fixing
+
+| paggerdo16
+| 14.1.17
+| 7
+| 8
+| creating and designing buttons for edit screen, designing background for edit screen and game screen and finishing it
+
+| neumannn16
+| 14.1.17
+| 5
+| 6
+| finish project report, cost estimation, time estimation and description of work packages
+
+| puetzlma16
+| 14.1.17
+| 5
+| 7
+| worked on implementation of saving function
+
+| puetzlma16
+| 15.1.17
+| 4
+| 5
+| finished implementation of saving function
+
+| puetzlma16
+| 18.1.17
+| 3
+| 10
+| implement code for loading function
+
+| paggerdo16
+| 18.1.17
+| 1
+| 2
+| implement and finish code for back to welcome screen buttons
+
+| paggerdo16
+| 18.1.17
+| 1
+| 2
+| design logo for the team and the game and finished it
+
+| neumannn16
+| 18.1.17
+| 1
+| 3
+| creating, designing and implementing buttons for welcome screen
+
+| neumannn16
+| 18.1.17
+| 2
+| 4
+| designing, implementing and finishing backgroung image for welcome screen
+
+| wachterf16
+| 18.1.17
+| 2
+| 4
+| bug fixing
+
+| neumannn16
+| 19.1.17
+| 1
+| 2
+| writing manual
+
+| puetzlma16
+| 19.1.17
+| 4
+| 5
+| finished implementation of loading function
+
+| puetzlma16
+| 19.1.17
+| 2
+| 5
+| trying to figure out how to implement a tableview
+
+| puetzlma16
+| 20.1.17
+| 3
+| 3
+| trying to figure out how to implement a tableview
+
+| puetzlma16
+| 20.1.17
+| 1
+| 1
+| implementing and finishing code implementation for naming scheme
+
+| puetzlma16
+| 21.1.17
+| 6
+| 5
+| finally figured out how to implement a tableview, implemented code and finished implementation
+
+| paggerdo16
+| 21.1.17
+| 3
+| 5
+| finished video and implementetion of splash screen
+
+| neumannn16
+| 23.1.17
+| 1
+| 1
+| taking screenshots of the game for the manual and finishing manual
+
+| paggerdo16
+| 23.1.17
+| 2
+| 4
+| designing, implementing and finishing statistic box for game screen
+
+| neumannn16
+| 23.1.17
+| 1
+| 1
+| designing credits screen
+
+| puetzlma16
+| 23.1.17
+| 1
+| 1
+| implement sounds for  whole game
+
+| puetzlma16
+| 23.1.17
+| 1
+| 1
+| creating desktop symbol to start game
+
+| puetzlma16
+| 23.1.17
+| 3
+| 4
+| bug fixing
+
+| paggerdo16
+| 24.1.17
+| 1
+| 1
+| implement gif for end of game screen
+
+|===

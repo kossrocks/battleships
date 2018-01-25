@@ -134,11 +134,17 @@
 .btn-save{
     -fx-background-image: url("pics/save.png");
     -fx-background-size: 30px,30px;
-    -fx-opacity: 0.7;
+    -fx-opacity: 0.9;
 }
 
 .btn-home{
     -fx-background-image: url("pics/home.png");
+    -fx-background-size: 30px,30px;
+    -fx-opacity: 0.9;
+}
+
+.btn-reset{
+    -fx-background-image: url("pics/reset.png");
     -fx-background-size: 30px,30px;
     -fx-opacity: 0.9;
 }
@@ -163,4 +169,8 @@
     -fx-background-image: url("pics/ship.gif");
 }
 
+.end{
+    -fx-background-image: url("pics/pirate.gif");
+    -fx-background-size: 300px,300px;
+}
 
