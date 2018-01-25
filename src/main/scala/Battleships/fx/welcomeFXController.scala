@@ -285,7 +285,7 @@ class welcomeFXController extends Initializable {
     else if (player1Name.getText.length > 8 || player2Name.getText.length > 10) setupError.setText("Use shorter names, you cannot remember the long ones!")
     else if (battleShips.getText.isEmpty || cruisers.getText.isEmpty || submarines.getText.isEmpty) setupError.setText("Do not leave any holes, your ships will be full of them!")
     else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt == 0) setupError.setText("You need ships to fight, fools!")
-    else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt >= 7) setupError.setText("No more than 7 ships, greedy bastard!")
+    else if (battleShips.getText.toInt + cruisers.getText.toInt + submarines.getText.toInt > 7) setupError.setText("No more than 7 ships, greedy bastard!")
     else if (player1Name.getText == player2Name.getText) setupError.setText("Use two different names! No copycats allowed!")
     else {
       println("Loading Game")
